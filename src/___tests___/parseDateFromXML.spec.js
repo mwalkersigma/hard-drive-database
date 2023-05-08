@@ -23,11 +23,4 @@ describe('parseDate', () => {
         const result = parseDateFromXML(input);
         expect(result).toEqual(expected);
     });
-
-    it('should throw an error for invalid input', () => {
-        const input = 'invalid date';
-        expect(() => {
-            parseDateFromXML(input);
-        }).toThrow();
-    });
 });

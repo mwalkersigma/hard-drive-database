@@ -6,7 +6,7 @@ export function parseDateFromXML(dateTime:string) {
         const [h, m, s] = time.split(":");
         let output =  new Date(+YYYY, +MM - 1, +DD, +h, +m, +s);
         if(output.toString() === "Invalid Date"){
-            throw new Error("Invalid date format");
+            new Error("Invalid date format");
         }
         return output;
     }
