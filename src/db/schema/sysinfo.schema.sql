@@ -10,5 +10,5 @@ CREATE TABLE sys_info
 
 
 -- Sysinfo table
-INSERT INTO sysinfo (report_id, os, platform, kernel, admin_rights, hostname)
+INSERT INTO sys_info (report_id, os, platform, kernel, admin_rights, hostname)
 VALUES (1, 'Linux Mint 20.3', '64-bit', '5.4.0-122-generic (linux)', 'true', 'mint');
