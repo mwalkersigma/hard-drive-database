@@ -15,9 +15,7 @@ CREATE TABLE device
 );
 
 CREATE INDEX FK_1 ON device
-    (
-     report_id
-        );
+    (report_id);
 
 
 

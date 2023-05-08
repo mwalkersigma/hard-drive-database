@@ -8,11 +8,7 @@ CREATE TABLE conclusion
 );
 
 CREATE INDEX FK_1 ON conclusion
-    (
-     report_id
-        );
+    (report_id);
 
 CREATE INDEX FK_2 ON conclusion
-    (
-     batch_report_id
-        );
+    (batch_report_id);

@@ -8,9 +8,7 @@ CREATE TABLE erase
 );
 
 CREATE INDEX FK_1 ON erase
-    (
-     report_id
-        );
+    (report_id);
 
 
 -- Sample data for 'erase' table

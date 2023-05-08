@@ -12,9 +12,7 @@ CREATE TABLE report
 );
 
 CREATE INDEX FK_1 ON report
-    (
-     batch_report_id
-        );
+(batch_report_id);
 
 
 -- Sample data for 'report' table
