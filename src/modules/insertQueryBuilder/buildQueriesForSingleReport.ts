@@ -290,7 +290,7 @@ const smart_parametersQuery = (report_id:number,rawData:{ 'smart_parameters':sma
 }
 
 /**
- * @name hardDriveReportBuilder
+ * @name buildQueriesForSingleReport
  * @description Builds the queries for inserting hardrives into the database
  * @description takes in the parsed XML data in the form of a JSON object
  * @param {number} report_id
@@ -301,6 +301,7 @@ function buildQueriesForSingleReport (report_id:number,parsedXMLData:reportData)
     const {device} = parsedXMLData;
     try {
         return [
+            eraseQuery(report_id,parsedXMLData),
             deviceQuery(report_id,parsedXMLData),
             resultsQuery(report_id,parsedXMLData),
             errorQuery(report_id,parsedXMLData),
