@@ -1,0 +1,105 @@
+https://app.sqldbm.com/PostgreSQL/Edit/p260704/
+
+LEGEND
+    TAB - sub-level
+    * - attribute
+    & - can have more than one
+    &0 - estimated number of items
+
+report
+  * created
+  * provider
+  * version
+  * kernel_version
+    started
+      * _text
+    elapsed
+      * _text
+    result
+      * _text
+    task
+        title
+          * _text
+        examine
+          * method
+          * read percent
+          * exclude failed
+            failure_limit
+              * _text
+    task
+        title
+          * _text
+        erase
+          * method
+          * passes
+          * verification
+        kill-disk
+            process_integrity
+            fingerprint
+            disk_init
+            range
+    errors
+      * lock_source
+      * retries
+      * error limit
+      * skip
+      * timeout
+      * terminate
+    bays
+      * count
+        bay
+            title
+              * _text
+            port
+              * _text
+            status
+              * _text
+            device
+                title
+                serial_number
+                platform_name
+                product
+                type
+                revision
+                size
+                geometry
+                    partitioning
+                    total_sec
+                    first_sec
+                    bps
+                smart_parameters
+                    param &15
+                      title
+                      * _text
+                smart_attributes
+                    attr &
+                        title
+                        value
+                        worst
+                        threshold
+                        type
+                        updated
+                        when-failed
+                        raw-value
+            task &2
+                title
+                  * _text
+                name
+                  * _text
+                started
+                  * _text
+                elapsed
+                  * _text
+                errors
+                  * _text
+                result
+                  * _text
+            sequence
+                started
+                  * _text
+                elapsed
+                  * _text
+                conclusion
+                * _text
+    conclusion
+      * _text
