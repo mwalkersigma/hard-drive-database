@@ -84,9 +84,6 @@ CREATE TABLE kill_disk
     report_id         bigint NOT NULL REFERENCES report ( report_id )
 );
 
-
-
-
 CREATE TABLE results
 (
     start_at        varchar(255) NOT NULL,
