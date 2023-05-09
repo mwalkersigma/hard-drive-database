@@ -59,7 +59,7 @@ function SearchHardDrives() {
                     <br/>
                     <Button onClick={()=> {
                         getSomeData()
-                            .then(data=>{
+                            .then(()=>{
                                 setResultsVisible(true);
                             });
                     }}> Search </Button>
