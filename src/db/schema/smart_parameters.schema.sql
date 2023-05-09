@@ -1,6 +1,6 @@
 CREATE TABLE smart_parameters
 (
-    report_id                            bigint NOT NULL,
+    report_id                            bigint NOT NULL REFERENCES report ( report_id ),
     device_model                         varchar(255) NOT NULL,
     firmware_version                     varchar(255) NOT NULL,
     capacity                             varchar(255) NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE smart_parameters
     smart_capabilities                   int NOT NULL,
     error_logging_capabilities           int NOT NULL,
     short_self_test_time_min             int NOT NULL,
-    extended_self_test_time_min          int NOT NULL REFERENCES report ( report_id )
+    extended_self_test_time_min          int NOT NULL
 );
 
 INSERT INTO smart_parameters (report_id, device_model,firmware_version, capacity, ata_version, ata_standard, smart_support, offline_data_collection_status, self_test_execution_status, time_offline_data_collection_sec, offline_data_collection_capabilities, smart_capabilities, error_logging_capabilities, short_self_test_time_min, extended_self_test_time_min)

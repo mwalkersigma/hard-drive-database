@@ -6,6 +6,7 @@ CREATE TABLE report
     provider        varchar(100) NOT NULL,
     kernel_version  varchar(20) NOT NULL,
     title           varchar(100) NOT NULL,
+    file_name varchar(250),
     batch_report_id bigint NULL REFERENCES batch_report ( batch_report_id )
 );
 

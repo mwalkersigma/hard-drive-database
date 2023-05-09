@@ -24,6 +24,7 @@ CREATE TABLE report
     provider        varchar(100) NOT NULL,
     kernel_version  varchar(20) NOT NULL,
     title           varchar(100) NOT NULL,
+    file_name varchar(250),
     batch_report_id bigint NULL REFERENCES batch_report ( batch_report_id )
 );
 CREATE TABLE conclusion
@@ -114,7 +115,7 @@ CREATE TABLE smart_attributes
 
 CREATE TABLE smart_parameters
 (
-    report_id                            bigint NOT NULL,
+    report_id                            bigint NOT NULL REFERENCES report ( report_id ),
     device_model                         varchar(255) NOT NULL,
     firmware_version                     varchar(255) NOT NULL,
     capacity                             varchar(255) NOT NULL,
@@ -128,7 +129,7 @@ CREATE TABLE smart_parameters
     smart_capabilities                   int NOT NULL,
     error_logging_capabilities           int NOT NULL,
     short_self_test_time_min             int NOT NULL,
-    extended_self_test_time_min          int NOT NULL REFERENCES report ( report_id )
+    extended_self_test_time_min          int NOT NULL
 );
 
 

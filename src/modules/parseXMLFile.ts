@@ -1,8 +1,8 @@
 import jsonFormatter from "./xmljsonFormatter";
-
+import convert from "xml-js";
 export default function parseXMLFile (file:any) {
-    let converted = JSON.parse(jsonFormatter(file));
-    delete converted._declaration
-    let json = jsonFormatter(converted);
-    return JSON.stringify(json,null,2);
+    let outputStream = convert.xml2json(file,{spaces:2,compact:true,ignoreComment:true,ignoreDoctype:true});
+    let parsedStream = JSON.parse(outputStream);
+    delete parsedStream._declaration;
+    return jsonFormatter(parsedStream);
 }

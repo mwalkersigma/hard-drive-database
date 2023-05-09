@@ -3,20 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "hard-drive-database/node_modules/.bin/next dev",
-    "build": "hard-drive-database/node_modules/.bin/next build",
-    "start": "hard-drive-database/node_modules/.bin/next start",
-    "lint": "hard-drive-database/node_modules/.bin/next lint"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@types/node": "20.0.0",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.3",
+    "bootstrap": "^5.2.3",
+    "dotenv": "^16.0.3",
     "eslint": "8.39.0",
     "eslint-config-next": "13.4.1",
     "next": "13.4.1",
     "pg": "^8.10.0",
     "react": "18.2.0",
+    "react-bootstrap": "^2.7.4",
     "react-dom": "18.2.0",
     "typescript": "5.0.4",
     "vitest": "^0.31.0",
