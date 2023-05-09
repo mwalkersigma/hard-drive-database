@@ -28,7 +28,7 @@ module.exports = {
             Query: ${text}
             Params: ${params}
         `
-        //console.log(logString)
+        console.log(logString)
         return pool.query(text, params);
     }
 };

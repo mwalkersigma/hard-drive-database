@@ -138,7 +138,7 @@ export interface reportData {
     killDisk: KillDiskData;
     errors: ErrorData;
 }
-const eraseQuery = (report_id,rawData) => {
+const eraseQuery = (report_id:number,rawData:any) => {
     const data = rawData?.erase;
     if(!data) return console.warn("ERASE QUERY : erase data not found");
     const method = data?.method  ?? defaults.STRING;
@@ -149,7 +149,7 @@ const eraseQuery = (report_id,rawData) => {
     let values = [method,passes,verification];
     return [query,values];
 };
-const killDiskQuery = (report_id,rawData) => {
+const killDiskQuery = (report_id:number,rawData:any) => {
     const killDisk = rawData?.['kill-disk'];
     if(!killDisk) return console.warn("KILL DISK QUERY : data not found");
     const processIntegrity = killDisk?.['process-integrity'] ?? defaults.STRING;
@@ -164,7 +164,7 @@ const killDiskQuery = (report_id,rawData) => {
     let values = [processIntegrity,fingerprintValue,fingerprintWrite,rangeFirst,rangeTotal,initialize];
     return [query,values];
 }
-const errorQuery = (report_id,rawData) => {
+const errorQuery = (report_id:number,rawData:any) => {
     const errorData = rawData?.errors;
     if(!errorData) return console.warn("ERROR QUERY : Error data not found");
     const lockSource = errorData?.lock_source ?? defaults.SHORT_STRING;
@@ -182,7 +182,7 @@ const errorQuery = (report_id,rawData) => {
     let values = [lockSource,retries,errorLimit,skip,timeout,terminate,ignoreLock,ignoreRead,ignoreWrite];
     return [query,values];
 }
-const deviceQuery = (report_id,rawData) => {
+const deviceQuery = (report_id:number,rawData:any) => {
     const device = rawData?.device;
     if(!device) return console.warn("DEVICE QUERY : data not found");
     const title = device?.title?.Name ?? defaults.STRING;
@@ -201,7 +201,7 @@ const deviceQuery = (report_id,rawData) => {
     let values = [title,serialNumber,platformName,productName,type,revision,partitioning,totalSectors,firstSector,bytesPerSector];
     return [query,values];
 }
-const resultsQuery = (report_id,rawData) => {
+const resultsQuery = (report_id:number,rawData:any) => {
     const results = rawData?.results;
     if(!results) return console.warn("RESULTS QUERY : data not found");
     const startedAt = results?.started["Started at"] ?? defaults.STRING;
@@ -215,7 +215,7 @@ const resultsQuery = (report_id,rawData) => {
     const queryValues = [startedAt,duration,errors,name,result];
     return [queryString,queryValues];
 }
-const sysInfoQuery = (report_id,rawData) => {
+const sysInfoQuery = (report_id:number,rawData:any) => {
     const sysInfo = rawData?.sysinfo;
     if(!sysInfo) return console.warn("SYSINFO : data not found");
     const os = sysInfo?.os ?? defaults.STRING;
@@ -229,10 +229,10 @@ const sysInfoQuery = (report_id,rawData) => {
     const queryValues = [os,platform,kernel,adminRights,hostname];
     return [queryString,queryValues];
 }
-const smart_AttributesQuery = (report_id,rawData) => {
+const smart_AttributesQuery = (report_id:number,rawData:any) => {
     const smartAttributes = rawData?.smart_attributes;
     if(!smartAttributes)return console.warn("SMART ATTRIBUTES QUERY : data not found");
-    return smartAttributes.attr.map(attr => {
+    return smartAttributes.attr.map((attr:any) => {
         const id = attr['@title'] ?? defaults.STRING;
         const value = attr.value ?? defaults.INT;
         const worst = attr.worst ?? defaults.INT;
@@ -248,7 +248,7 @@ const smart_AttributesQuery = (report_id,rawData) => {
         ]
     })
 }
-const smart_parametersQuery = (report_id,rawData) => {
+const smart_parametersQuery = (report_id:number,rawData:any) => {
     const smartParameters = rawData?.smart_parameters;
     if(!smartParameters) return console.warn("SMART PARAMETERS : data not found");
     const deviceModel = smartParameters?.['device-model'] ?? defaults.STRING;
@@ -275,9 +275,6 @@ const smart_parametersQuery = (report_id,rawData) => {
 
 
 }
-function isIterable (input) {
-    return typeof input[Symbol.iterator] === 'function'
-}
 /**
  * @name buildHardDriveQueryHelper
  * @description Builds the queries for inserting hardrives into the database
@@ -286,8 +283,7 @@ function isIterable (input) {
  * @param {JSON} parsedXMLData
  * @returns {Array} Array of queries and values to be inserted into the database
  */
-
-function buildHardDriveQueryHelper (report_id,parsedXMLData) {
+function buildHardDriveQueryHelper (report_id:number,parsedXMLData:any) {
     const device = parsedXMLData?.device;
     try {
         let queries = [
