@@ -2,7 +2,7 @@ import parseXMLFile from "../../modules/parseXMLFile";
 import buildHardDriveQuery from "../../modules/insertQueryBuilder/buildHardDriveQuery";
 import db from "../../db/index";
 
-export default function handler (req,res) {
+export default function handler (req:any,res:any) {
     if(req.method !== 'POST') {res.status(400).json({text: 'Method not allowed'})}
     const name = req.query?.name;
     if(!name)return res.status(400).json({text: 'Name is required'})
