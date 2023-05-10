@@ -12,7 +12,7 @@ function NavBar () {
                 </Navbar.Brand>
                 <Nav className="me-auto">
                     <Nav.Link href={"/searchHardDrives"} as={Link}>Search Hard Drives</Nav.Link>
-                    <Nav.Link href={"/addHardDrive"} as={Link}>Add new hard drives</Nav.Link>
+                    {/*<Nav.Link href={"/addHardDrive"} as={Link}>Add new hard drives</Nav.Link>*/}
                 </Nav>
             </Container>
         </Navbar>
