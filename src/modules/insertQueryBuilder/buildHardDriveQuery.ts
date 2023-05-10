@@ -12,13 +12,14 @@ export default function buildHardDriveQuery (parsedJSON:reportData,pool:any){
     const kernel_version = parsedJSON?.kernel_version ?? defaults.STRING;
     const title = parsedJSON?.title ?? defaults.STRING;
     const file_name = parsedJSON?.name ?? defaults.STRING;
+    const company = parsedJSON?.company ?? defaults.STRING;
     let query =
         `
-        INSERT INTO report (created,provider,kernel_version,title,file_name)
-        VALUES($1,$2,$3,$4,$5)
+        INSERT INTO report (created,provider,kernel_version,title,file_name,company)
+        VALUES($1,$2,$3,$4,$5,$6)
         RETURNING report_id;
         `
-    pool.query(query,[date,provider,kernel_version,title,file_name])
+    pool.query(query,[date,provider,kernel_version,title,file_name,company])
         .then((res:any)=>{
             const report_id = res.rows[0].report_id;
             const queries:any = buildHardDriveQueryHelper(report_id,parsedJSON);

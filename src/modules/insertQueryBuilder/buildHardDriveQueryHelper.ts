@@ -131,6 +131,7 @@ interface sys_infoData{
     "hostname": string | null
 }
 export interface reportData {
+    company: string;
     created:string
     provider:string
     kernel_version:string
