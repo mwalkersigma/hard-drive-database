@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # WipeHardDrive.sh
+# chmod u+x wipeHardDrive.sh
 
 temp_folder_path="/Volumes/Temp"
 long_term_storage_path="/Volumes/LongTermStorage"
