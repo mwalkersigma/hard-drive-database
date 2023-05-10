@@ -1,2 +1,2 @@
 --SELECT * FROM smart_attributes;
-SELECT * FROM report;
+SELECT * FROM smart_attributes;

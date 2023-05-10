@@ -131,6 +131,11 @@ interface sys_infoData{
     "hostname": string | null
 }
 export interface reportData {
+    created:string
+    provider:string
+    kernel_version:string
+    title:string
+    name:string
     device: deviceData;
     results: resultsData;
     sysinfo: sys_infoData;
@@ -207,8 +212,8 @@ const resultsQuery = (report_id:number,rawData:any) => {
     const startedAt = results?.started["Started at"] ?? defaults.STRING;
     const duration = results?.elapsed?.Duration ?? defaults.STRING;
     const errors = results?.process.errors?.Errors ?? defaults.STRING;
-    const name = results?.process.name ?? defaults.STRING;
-    const result = results?.process.result ?? defaults.STRING;
+    const name = results?.process.name.Name ?? defaults.STRING;
+    const result = results?.process.result.Result ?? defaults.STRING;
     const queryString =
         `INSERT INTO results ( report_id, start_at, duration, process_errors, process_name, process_results)
         VALUES (${report_id}, $1, $2, $3, $4, $5)`;
@@ -230,7 +235,7 @@ const sysInfoQuery = (report_id:number,rawData:any) => {
     return [queryString,queryValues];
 }
 const smart_AttributesQuery = (report_id:number,rawData:any) => {
-    const smartAttributes = rawData?.smart_attributes;
+    const smartAttributes = rawData?.['smart-attributes'];
     if(!smartAttributes)return console.warn("SMART ATTRIBUTES QUERY : data not found");
     return smartAttributes.attr.map((attr:any) => {
         const id = attr['@title'] ?? defaults.STRING;
@@ -243,8 +248,8 @@ const smart_AttributesQuery = (report_id:number,rawData:any) => {
         const rawValue = attr["raw-value"] ?? defaults.STRING;
         return [`
         INSERT INTO smart_attributes (report_id, title, value, worst, threshold, attr_type, updated, when_failed, raw_value)
-        VALUES (${report_id},$1,$2,$3,$4,$5,$6,$7,$8,$9);`,
-            [id,name,value,worst,threshold,type,updated,whenFailed,rawValue]
+        VALUES (${report_id},$1,$2,$3,$4,$5,$6,$7,$8);`,
+            [id,value,worst,threshold,type,updated,whenFailed,rawValue]
         ]
     })
 }

@@ -3,10 +3,10 @@ import buildHardDriveQueryHelper, {
     reportData
 } from "../../modules/insertQueryBuilder/buildHardDriveQueryHelper"
 import {parseDateFromXML} from "../parseDateFromXML";
-function isIterable (input) {
+function isIterable (input:any) {
     return typeof input[Symbol.iterator] === 'function'
 }
-export default function buildHardDriveQuery (parsedJSON:reportData,pool){
+export default function buildHardDriveQuery (parsedJSON:reportData,pool:any){
     const date = parseDateFromXML(parsedJSON.created);
     const provider = parsedJSON?.provider ?? defaults.STRING ;
     const kernel_version = parsedJSON?.kernel_version ?? defaults.STRING;
@@ -21,11 +21,11 @@ export default function buildHardDriveQuery (parsedJSON:reportData,pool){
     pool.query(query,[date,provider,kernel_version,title,file_name])
         .then((res:any)=>{
             const report_id = res.rows[0].report_id;
-            const queries = buildHardDriveQueryHelper(report_id,parsedJSON);
+            const queries:any = buildHardDriveQueryHelper(report_id,parsedJSON);
             if(!isIterable(queries))return;
             for(let [qString,qParam] of queries){
                 pool.query(qString,qParam)
-                    .catch(err=>console.warn(err))
+                    .catch((err:any)=>console.warn(err))
             }
         })
         .catch((err:any)=>{

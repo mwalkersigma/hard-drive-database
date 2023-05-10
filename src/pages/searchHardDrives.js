@@ -3,32 +3,44 @@ import {Button, Col, Form, Row} from "react-bootstrap";
 import {useState} from "react";
 
 function HardDriveDataDisplay ({hardDrive}) {
-    console.log(hardDrive)
+    const itemsPerRow = 4;
+    let rows = [];
+    const formatted = {}
+    let count = 0;
+    Object.entries(hardDrive).forEach(([fieldKey,fieldValue])=>{
+        let temp =[]
+        Object.entries(fieldValue).forEach(([itemKey,itemValue])=>{
+            temp.push({itemKey,itemValue})
+            count++
+            if(count===itemsPerRow){
+                rows.push(temp);
+                temp=[];
+                count = 0;
+            }
+        })
+        formatted[fieldKey]=rows;
+        rows = [];
+    })
+    console.log(formatted)
     return (
         hardDrive &&
         <Form className={"p-5"}>
-            {hardDrive && Object.entries(hardDrive).map(([key,value],index)=>{
+            {Object.entries(formatted).map(([fieldKey,fieldValue],index)=>{
                 return (
-                    <>
-                        <Form.Label style={{padding:"0 0 0 2%"}} className={"h1 text-xxl-center"}>{key.toUpperCase()}</Form.Label>
-                        <br/>
-                        <Row key={index}>
-                            {Object.entries(value).map(([k,v],i)=>{
-                                return (
-                                    <Form.Group key={i} as={Col} controlId="formGridCity">
-                                        <Form.Label>{k}</Form.Label>
-                                        <Form.Control readOnly disabled value={v}/>
-                                    </Form.Group>
-                                )
-                            })
-                            }
-                        </Row>
-                        <br/>
-                        <br/>
-                        <br/>
-                        <br/>
-                        <br/>
-                    </>
+                    <Form.Group className={"pb-5"} key={index}>
+                        <Form.Label className={"h1 pb-3"}>{fieldKey.toUpperCase()}</Form.Label>
+                        {fieldValue.map((rowItem,j)=>{
+                            return (
+                                <Row key={j}>
+                                    {rowItem.map(({itemKey,itemValue},k)=>(
+                                        <Form.Group key={k} as={Col} controlId="formGridManufacturer">
+                                            <Form.Label>{itemKey}</Form.Label>
+                                            <Form.Control readOnly disabled type="text" value={itemValue}/>
+                                        </Form.Group>
+                                    ))}
+                                </Row>)}
+                        )}
+                    </Form.Group>
                 )
             })}
         </Form>

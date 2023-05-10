@@ -1,6 +1,7 @@
 import db from "../../db/index";
 
-async function handleQuery (queryParams) {
+// @ts-ignore
+async function handleQuery (queryParams,res) {
     const {serial_number} = queryParams;
     let reportIdQuery = await db.query(`
         SELECT report.report_id 
@@ -18,7 +19,11 @@ async function handleQuery (queryParams) {
     const results = await db.query(`SELECT * FROM results WHERE report_id = $1`,[reportId]);
     const smartAttributes = await db.query(`SELECT * FROM smart_attributes WHERE report_id = $1`,[reportId]);
     const smartParameters = await db.query(`SELECT * FROM smart_parameters WHERE report_id = $1`,[reportId]);
+    const report = await db.query(`SELECT * FROM report WHERE report_id = $1`,[reportId]);
+
+    // Here is where getting multiple results would be handled on the backend
     return {
+        report:report.rows?.[0],
         erase:erase.rows?.[0],
         device:device.rows?.[0],
         errors:errors.rows?.[0],
@@ -31,13 +36,13 @@ async function handleQuery (queryParams) {
 }
 
 
+// @ts-ignore
 export default function handler (req,res) {
     let queryParams = req.query;
     if(!queryParams)return res.status(400).json({text: 'Query is required'})
     try {
-       return handleQuery(queryParams)
+       return handleQuery(queryParams,res)
             .then((data) => {
-                console.log(data)
                return res.status(200).json(JSON.stringify(data))
             })
             .catch((e) => {
