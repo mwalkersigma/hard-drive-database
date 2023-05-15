@@ -1,6 +1,7 @@
 import Container from "react-bootstrap/Container";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import {useState} from "react";
+import {GetServerSideProps} from "next";
 
 function HardDriveDataDisplay ({hardDrive}) {
     const itemsPerRow = 4;
@@ -47,13 +48,21 @@ function HardDriveDataDisplay ({hardDrive}) {
     )
 }
 
+
+
 function SearchHardDrives() {
     const [resultsVisible,setResultsVisible] = useState(false);
     const [hardDrive,setHardDrive] = useState({})
     const [userSearch,setUserSearch] = useState("")
 
     const getSomeData = async ()=> {
-        const res = await fetch(`http://localhost:3000/api/getHardDriveBySerial?serial_number=${userSearch}`);
+        // get the host name from process.env
+        let hostname,port;
+        if(typeof window !== 'undefined') {
+            hostname = window.location.hostname;
+            port = window.location.port;
+        }
+        const res = await fetch(`http://${hostname}:${port}/api/getHardDriveBySerial?serial_number=${userSearch}`);
         const data = await res.json();
         setHardDrive(JSON.parse(data));
 
