@@ -284,6 +284,7 @@ const taskQuery = (report_id:number,rawData:any) => {
         let taskData = task?.data ?? defaults.JSON;
         let queryString = `INSERT INTO tasks (report_id, task_title, task_data) VALUES (${report_id},$1,$2);`
         let queryValues = [taskTitle,taskData];
+        return [queryString,queryValues];
     })
 }
 function loggerWrapper (log:string,cb:any,...rest:any) {

@@ -39,7 +39,7 @@ function handleBatchReport (parsedFile:any,name:string,company:string,log:string
                         log += `starting subqueries\n`;
                         subQueryCallback(reportID,db,log);
                         db.query(addBatchReportIdQuery,[batchReportId,reportID])
-                            .then((result:any)=>{log += `Added batch report id to report ${reportID}\n`})
+                            .then(()=>{log += `Added batch report id to report ${reportID}\n`})
                             .catch((err:any)=> log += `${err}`);
                     })
                     .catch((err:any)=> log += `${err}`)
@@ -48,7 +48,7 @@ function handleBatchReport (parsedFile:any,name:string,company:string,log:string
                 db.query(
                     `INSERT INTO batch_tasks (batch_report_id,title,data) VALUES ($1,$2,$3);`,
                     [batchReportId,task_title,task_data])
-                    .then((result:any)=>{log += `Added task ${task_title} to batch report ${batchReportId}\n`})
+                    .then(()=>{log += `Added task ${task_title} to batch report ${batchReportId}\n`})
             })
         })
         .catch((err:any)=> log += `${err}`)
