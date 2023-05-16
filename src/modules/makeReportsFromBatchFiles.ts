@@ -35,8 +35,8 @@ function makeReportsFromBatch(formattedJson:any){
             provider: "",
             kernel_version: "",
             title: "",
-            customer:"",
-            file_name : "",
+            company:"",
+            name : "",
             conclusion:{
                 value:"",
             },
@@ -74,50 +74,68 @@ function makeReportsFromBatch(formattedJson:any){
                 skip:"",
                 timeout:"",
                 terminate:"",
-                ignore_lock:"",
-                ignore_read:"",
-                ignore_write:"",
+                ignore:{
+                    lock:"",
+                    read:"",
+                    write:""
+                }
             },
             kill_disk:{
-                process_integrity:"",
-                fingerprint:"",
-                write:"",
-                disk_init:"",
-                range_first:"",
-                range_total:"",
+                ["process-integrity"]:"",
+                fingerprint:{
+                    write:"",
+                    value:"",
+                },
+                initialize:"",
+                range:{
+                    first:"",
+                    total:"",
+                }
             },
             results:{
-                start_at:"",
-                duration:"",
-                process_name:"",
-                process_errors:"",
-                process_results:""
+                started:{
+                    "Started at":""
+                },
+                elapsed:{
+                    "Duration":""
+                },
+                process:{
+                    errors:{
+                        Errors:""
+                    },
+                    name:{
+                        Name:""
+                    },
+                    result:{
+                        Result:""
+                    }
+                },
             },
             smart_attributes:{
-                title:"",
+                "@title":"",
                 value:"",
                 worst:"",
                 threshold:"",
-                attr_type:"",
+                type:"",
                 updated:"",
-                when_failed:"",
-                raw_value:"",
+                "when-failed":"",
+                "raw-value":"",
             },
             smart_parameters:{
-                device_model:"",
-                firmware_version:"",
+                "device-model":"",
+                "firmware-version":"",
                 capacity:"",
-                ata_version:"",
-                ata_standard:"",
-                smart_support:"",
-                offline_data_collection_status:"",
-                self_test_execution_status:"",
-                time_offline_data_collection_sec:"",
-                offline_data_collection_capabilities:"",
-                smart_capabilities:"",
-                error_logging_capabilities:"",
-                short_self_test_time_min:"",
-                extended_self_test_time_min:"",
+                "ata-version":"",
+                "ata-standard":"",
+                "smart-support":"",
+                "offline-data-collection-status":"",
+                "self-test-execution-status":"",
+                "time-offline-data-collection":"",
+                "off-line-data-collection-capabilities":"",
+                "smart-capabilities":"",
+                "error-logging-capabilities":"",
+                "short-self-test-time":"",
+                "extended-self-test-time":"",
             },
             tasks:[]
         }
@@ -125,6 +143,8 @@ function makeReportsFromBatch(formattedJson:any){
         template.created = formattedJson.report.created;
         template.provider = formattedJson.report.provider;
         template.kernel_version = formattedJson.report['kernel-version'];
+        template.company = formattedJson.report.company;
+        template.name = formattedJson.report['name'];
         template.conclusion.value = formattedJson.report.conclusion;
         template.errors.lock_source = formattedJson.report.errors['locksource'];
         template.errors.retries = formattedJson.report.errors['retries'];
@@ -132,15 +152,15 @@ function makeReportsFromBatch(formattedJson:any){
         template.errors.skip = formattedJson.report.errors['skip'];
         template.errors.timeout = formattedJson.report.errors['timeout'];
         template.errors.terminate = formattedJson.report.errors['terminate'];
-        template.errors.ignore_lock = formattedJson.report.errors.ignore['lock'];
-        template.errors.ignore_read = formattedJson.report.errors.ignore['read'];
-        template.errors.ignore_write = formattedJson.report.errors.ignore['write'];
+        template.errors.ignore.lock = formattedJson.report.errors.ignore['lock'];
+        template.errors.ignore.read = formattedJson.report.errors.ignore['read'];
+        template.errors.ignore.write = formattedJson.report.errors.ignore['write'];
 
-        template.results.start_at = formattedJson.report.started["Started at"];
-        template.results.duration = formattedJson.report.elapsed["Duration"];
-        template.results.process_name = "Batch Erase";
-        template.results.process_errors = "N/A";
-        template.results.process_results = "N/A";
+        template.results.started["Started at"] = formattedJson.report.started["Started at"];
+        template.results.elapsed.Duration = formattedJson.report.elapsed["Duration"];
+        template.results.process.name.Name = "Batch Erase";
+        template.results.process.errors.Errors = "N/A";
+        template.results.process.result.Result = "N/A";
 
         let testBay = formattedJson.report['bays']['bay'][i];
         template.title = testBay.title;
@@ -156,20 +176,20 @@ function makeReportsFromBatch(formattedJson:any){
         template.device.geometry["first-sec"]["First Sector"] = testBay.device.geometry['first-sec']['First Sector'];
         template.device.geometry.bps["Bytes per Sector"] = testBay.device.geometry['bps']['Bytes per Sector'];
 
-        template.smart_parameters.device_model = testBay.device['smart-parameters']['Device Model'];
-        template.smart_parameters.firmware_version = testBay.device['smart-parameters']['Firmware Version'];
+        template.smart_parameters["device-model"] = testBay.device['smart-parameters']['Device Model'];
+        template.smart_parameters["firmware-version"] = testBay.device['smart-parameters']['Firmware Version'];
         template.smart_parameters.capacity = testBay.device['smart-parameters']['Capacity'];
-        template.smart_parameters.ata_version = testBay.device['smart-parameters']['ATA Version'];
-        template.smart_parameters.ata_standard = testBay.device['smart-parameters']['ATA Standard'];
-        template.smart_parameters.smart_support = testBay.device['smart-parameters']['SMART Support'];
-        template.smart_parameters.offline_data_collection_status = testBay.device['smart-parameters']['Off-line Data Collection Status'];
-        template.smart_parameters.self_test_execution_status = testBay.device['smart-parameters']['Self-test Execution Status'];
-        template.smart_parameters.time_offline_data_collection_sec = testBay.device['smart-parameters']['Time Off-line Data Collection, sec'];
-        template.smart_parameters.offline_data_collection_capabilities = testBay.device['smart-parameters']['Off-line Data Collection Capabilities'];
-        template.smart_parameters.smart_capabilities = testBay.device['smart-parameters']['SMART Capabilities'];
-        template.smart_parameters.error_logging_capabilities = testBay.device['smart-parameters']['Error Logging Capabilities'];
-        template.smart_parameters.short_self_test_time_min = testBay.device['smart-parameters']['Short Self-test Time, min'];
-        template.smart_parameters.extended_self_test_time_min = testBay.device['smart-parameters']['Extended Self-test Time, min'];
+        template.smart_parameters["ata-version"] = testBay.device['smart-parameters']['ATA Version'];
+        template.smart_parameters["ata-standard"] = testBay.device['smart-parameters']['ATA Standard'];
+        template.smart_parameters["smart-support"] = testBay.device['smart-parameters']['SMART Support'];
+        template.smart_parameters["offline-data-collection-status"] = testBay.device['smart-parameters']['Off-line Data Collection Status'];
+        template.smart_parameters["self-test-execution-status"] = testBay.device['smart-parameters']['Self-test Execution Status'];
+        template.smart_parameters["time-offline-data-collection"] = testBay.device['smart-parameters']['Time Off-line Data Collection, sec'];
+        template.smart_parameters["off-line-data-collection-capabilities"] = testBay.device['smart-parameters']['Off-line Data Collection Capabilities'];
+        template.smart_parameters["smart-capabilities"] = testBay.device['smart-parameters']['SMART Capabilities'];
+        template.smart_parameters["error-logging-capabilities"] = testBay.device['smart-parameters']['Error Logging Capabilities'];
+        template.smart_parameters["short-self-test-time"] = testBay.device['smart-parameters']['Short Self-test Time, min'];
+        template.smart_parameters["extended-self-test-time"] = testBay.device['smart-parameters']['Extended Self-test Time, min'];
 
         template.smart_attributes = testBay.device['smart-attributes'];
 

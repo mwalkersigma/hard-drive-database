@@ -7,6 +7,8 @@ conclusion
 errors
 tasks
  */
+import {parseDateFromXML} from "../parseDateFromXML";
+
 interface BatchReport {
     result: any;
     elapsed: any;
@@ -16,15 +18,14 @@ interface BatchReport {
     provider: any;
     created: any;
 }
-function buildBatchQuery(inputData:[BatchReport,{}[],[][]]){
-    const [batchReport] = inputData;
+export default function buildBatchQuery(batchReport:any,){
     let batchQuery = `
     INSERT INTO batch_report (created,provider,version,kernel_version,started,elapsed,result)
     VALUES ($1,$2,$3,$4,$5,$6,$7)
     RETURNING batch_report_id;
     `
     let batchQueryValues = [
-        batchReport.created,
+        parseDateFromXML(batchReport.created),
         batchReport.provider,
         batchReport.version,
         batchReport.kernel_version,
@@ -32,16 +33,5 @@ function buildBatchQuery(inputData:[BatchReport,{}[],[][]]){
         batchReport.elapsed,
         batchReport.result
     ];
-    let reportQuery = `
-    INSERT INTO report (batch_report_id,created,provider,kernel_version,title,file_name,customer)
-    VALUES ($1,$2,$3,$4,$5,$6,$7)
-    RETURNING report_id;
-    `;
-
-    let taskQuery = `
-    INSERT INTO batch_tasks (batch_report_id,title,data,batch_tasks_id)
-    VALUES ($1,$2,$3);
-    `;
-    return [[batchQuery,batchQueryValues],reportQuery,taskQuery];
-
+    return [batchQuery,batchQueryValues] as [string,any[]]
 }

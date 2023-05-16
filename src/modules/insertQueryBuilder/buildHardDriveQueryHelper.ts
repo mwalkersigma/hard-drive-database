@@ -4,10 +4,6 @@ export const defaults = {
     SHORT_STRING:"N/A"
 }
 
-
-
-
-
 interface EraseData {
     method:string | null,
     passes:string | null,
@@ -295,7 +291,6 @@ function loggerWrapper (log:string,cb:any,...rest:any) {
  */
 function buildHardDriveQueryHelper (report_id:number,parsedXMLData:any,log:string) {
     const device = parsedXMLData?.device;
-    console.log("DEVICE",device)
     try {
         let queries = [
             loggerWrapper(log,eraseQuery,report_id,parsedXMLData),

@@ -24,11 +24,13 @@ const pool = new Pool({
 
 module.exports = {
     query: (text, params) =>{
+
         let logString = `
-            Query: ${text}
-            Params: ${params}
+        Query: ${text}
+        Params: ${params}
         `
-        console.log(logString)
+        //console.log(logString)
+
         return pool.query(text, params);
     },
     mock: (text, params) =>{
