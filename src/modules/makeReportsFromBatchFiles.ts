@@ -1,3 +1,5 @@
+import {defaults} from "./insertQueryBuilder/buildHardDriveQueryHelper";
+
 function makeReportsFromBatch(formattedJson:any){
     let batchReport = {
         created: "",
@@ -137,7 +139,7 @@ function makeReportsFromBatch(formattedJson:any){
                 "short-self-test-time":"",
                 "extended-self-test-time":"",
             },
-            tasks:[]
+            tasks: []
         }
 
         template.created = formattedJson.report.created;
@@ -165,7 +167,7 @@ function makeReportsFromBatch(formattedJson:any){
         let testBay = formattedJson.report['bays']['bay'][i];
         template.title = testBay.title;
 
-        template.device.title.Name = testBay.device.title["Name"];
+        template.device.title.Name = testBay.device?.title["Name"] ?? defaults.SHORT_STRING;
         template.device["serial-number"]["Serial Number"] = testBay.device['serial-number']['Serial Number'];
         template.device.platformname["Platform Name"] = testBay.device['platformname']['Platform Name'];
         template.device.product["Product Name"] = testBay.device['product']['Product Name'];
@@ -192,15 +194,14 @@ function makeReportsFromBatch(formattedJson:any){
         template.smart_parameters["extended-self-test-time"] = testBay.device['smart-parameters']['Extended Self-test Time, min'];
 
         template.smart_attributes = testBay.device['smart-attributes'];
-
-        const tasks: any[] = [];
+        const tasks: {title:string,data:any}[] = [];
         testBay.task.forEach((task:any) => {
             let temp = {
-                task_title: task.title,
-                task_data: task,
+                title: task.title,
+                data: task,
             }
-            delete temp.task_data.title;
-            temp.task_data = JSON.stringify(temp.task_data);
+            delete temp.data.title;
+            temp.data = JSON.stringify(temp.data);
             tasks.push(temp);
         })
         // @ts-ignore

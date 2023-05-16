@@ -30,7 +30,7 @@ module.exports = {
         Params: ${params}
         `
         if(process.env.NODE_ENV === "development"){
-            console.log(logString)
+            //console.log(logString)
         }
         return pool.query(text, params);
     },
