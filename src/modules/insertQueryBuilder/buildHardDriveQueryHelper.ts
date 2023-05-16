@@ -141,9 +141,9 @@ export interface reportData {
     killDisk: KillDiskData;
     errors: ErrorData;
 }
-const eraseQuery = (report_id:number,rawData:any) => {
+const eraseQuery = (report_id:number,rawData:any,log:(message:string)=>void) => {
     const data = rawData?.erase;
-    if(!data) return console.warn("ERASE QUERY : erase data not found");
+    if(!data) return log("ERASE QUERY : erase data not found");
     const method = data?.method  || defaults.STRING;
     const passes  = data?.passes || defaults.INT
     const verification = data?.verification ?? defaults.SHORT_STRING;
@@ -152,9 +152,9 @@ const eraseQuery = (report_id:number,rawData:any) => {
     let values = [method,passes,verification];
     return [query,values];
 };
-const killDiskQuery = (report_id:number,rawData:any) => {
+const killDiskQuery = (report_id:number,rawData:any,log:(message:string)=>void) => {
     const killDisk = rawData?.['kill-disk'];
-    if(!killDisk) return console.warn("KILL DISK QUERY : data not found");
+    if(!killDisk) return log("KILL DISK QUERY : data not found");
     const processIntegrity = killDisk?.['process-integrity'] ?? defaults.STRING;
     const fingerprintWrite = killDisk?.fingerprint?.write ?? defaults.SHORT_STRING;
     const fingerprintValue = killDisk?.fingerprint?.value ?? defaults.SHORT_STRING;
@@ -167,9 +167,9 @@ const killDiskQuery = (report_id:number,rawData:any) => {
     let values = [processIntegrity,fingerprintValue,fingerprintWrite,rangeFirst,rangeTotal,initialize];
     return [query,values];
 }
-const errorQuery = (report_id:number,rawData:any) => {
+const errorQuery = (report_id:number,rawData:any,log:(message:string)=>void) => {
     const errorData = rawData?.errors;
-    if(!errorData) return console.warn("ERROR QUERY : Error data not found");
+    if(!errorData) return log("ERROR QUERY : Error data not found");
     const lockSource = errorData?.lock_source ?? defaults.SHORT_STRING;
     const retries = errorData?.retries ?? defaults.INT;
     const errorLimit = errorData?.errorLimit ?? defaults.INT;
@@ -185,9 +185,9 @@ const errorQuery = (report_id:number,rawData:any) => {
     let values = [lockSource,retries,errorLimit,skip,timeout,terminate,ignoreLock,ignoreRead,ignoreWrite];
     return [query,values];
 }
-const deviceQuery = (report_id:number,rawData:any) => {
-    const device = rawData;
-    if(!device) return console.warn("DEVICE QUERY : data not found");
+const deviceQuery = (report_id:number,rawData:any,log:(message:string)=>void) => {
+    const device = rawData.device;
+    if(!device) return log("DEVICE QUERY : data not found");
     const title = device?.title?.Name ?? defaults.STRING;
     const serialNumber = device?.['serial-number']?.['Serial Number'] ?? defaults.STRING;
     const platformName = device?.platformname?.['Platform Name'] ?? defaults.STRING;
@@ -204,9 +204,9 @@ const deviceQuery = (report_id:number,rawData:any) => {
     let values = [title,serialNumber,platformName,productName,type,revision,partitioning,totalSectors,firstSector,bytesPerSector];
     return [query,values];
 }
-const resultsQuery = (report_id:number,rawData:any) => {
+const resultsQuery = (report_id:number,rawData:any,log:(message:string)=>void) => {
     const results = rawData?.results;
-    if(!results) return console.warn("RESULTS QUERY : data not found");
+    if(!results) return log("RESULTS QUERY : data not found");
     const startedAt = results?.started?.["Started at"] ?? defaults.STRING;
     const duration = results?.elapsed?.Duration ?? defaults.STRING;
     const errors = results?.process?.errors?.Errors ?? defaults.STRING;
@@ -218,9 +218,9 @@ const resultsQuery = (report_id:number,rawData:any) => {
     const queryValues = [startedAt,duration,errors,name,result];
     return [queryString,queryValues];
 }
-const sysInfoQuery = (report_id:number,rawData:any) => {
+const sysInfoQuery = (report_id:number,rawData:any,log:(message:string)=>void) => {
     const sysInfo = rawData?.sysinfo;
-    if(!sysInfo) return console.warn("SYSINFO : data not found");
+    if(!sysInfo) return log("SYSINFO : data not found");
     const os = sysInfo?.os ?? defaults.STRING;
     const platform = sysInfo?.platform ?? defaults.STRING;
     const kernel = sysInfo?.kernel ?? defaults.STRING;
@@ -232,9 +232,9 @@ const sysInfoQuery = (report_id:number,rawData:any) => {
     const queryValues = [os,platform,kernel,adminRights,hostname];
     return [queryString,queryValues];
 }
-const smart_AttributesQuery = (report_id:number,rawData:any) => {
-    const smartAttributes = rawData?.['smart-attributes'];
-    if(!smartAttributes)return console.warn("SMART ATTRIBUTES QUERY : data not found");
+const smart_AttributesQuery = (report_id:number,rawData:any,log:(message:string)=>void) => {
+    const smartAttributes = rawData.device?.['smart-attributes'];
+    if(!smartAttributes)return log("SMART ATTRIBUTES QUERY : data not found");
     return smartAttributes.attr.map((attr:any) => {
         const id = attr['@title'] ?? defaults.STRING;
         const value = attr.value ?? defaults.INT;
@@ -251,9 +251,9 @@ const smart_AttributesQuery = (report_id:number,rawData:any) => {
         ]
     })
 }
-const smart_parametersQuery = (report_id:number,rawData:any) => {
-    const smartParameters = rawData?.smart_parameters;
-    if(!smartParameters) return console.warn("SMART PARAMETERS : data not found");
+const smart_parametersQuery = (report_id:number,rawData:any,log:(message:string)=>void) => {
+    const smartParameters = rawData.device?.smart_parameters;
+    if(!smartParameters) return log("SMART PARAMETERS : data not found");
     const deviceModel = smartParameters?.['device-model'] ?? defaults.STRING;
     const firmwareVersion = smartParameters?.['firmware-version'] ?? defaults.STRING;
     const capacity = smartParameters?.capacity ?? defaults.STRING;
@@ -275,21 +275,16 @@ const smart_parametersQuery = (report_id:number,rawData:any) => {
         [deviceModel,firmwareVersion,capacity,ataVersion,ataStandard,smartSupport,offlineDataCollectionStatus,selfTestExecutionStatus,timeOfflineDataCollection,offlineDataCollectionCapability,smartCapability,errorLoggingCapability,shortSelfTestTime,extendedSelfTestTime]
     ]
 }
-
-const taskQuery = (report_id:number,rawData:any) => {
-    const task = rawData?.tasks;
-    if(!task) return console.warn("TASKS : data not found");
-    return task.map((task:any) => {
+const taskQuery = (report_id:number,rawData:any,log:(message:string)=>void) => {
+    const tasks = rawData?.tasks;
+    if(!tasks) return log("TASKS : data not found");
+    return tasks.map((task:any) => {
         let taskTitle = task?.title ?? defaults.STRING;
         let taskData = task?.data ?? defaults.JSON;
         let queryString = `INSERT INTO tasks (report_id, task_title, task_data) VALUES (${report_id},$1,$2);`
         let queryValues = [taskTitle,taskData];
         return [queryString,queryValues];
     })
-}
-function loggerWrapper (log:string,cb:any,...rest:any) {
-    log += ` ${rest.join(" ")}`
-    return cb(...rest);
 }
 
 /**
@@ -301,33 +296,30 @@ function loggerWrapper (log:string,cb:any,...rest:any) {
  * @param {string} log
  * @returns {Array} Array of queries and values to be inserted into the database
  */
-function buildHardDriveQueryHelper (report_id:number,parsedXMLData:any,log:string) {
-    const device = parsedXMLData?.device;
+function buildHardDriveQueryHelper (report_id:number,parsedXMLData:any,log:(message:string)=>void) {
+    const singleFieldQueries = [
+        eraseQuery,
+        deviceQuery,
+        resultsQuery,
+        errorQuery,
+        killDiskQuery,
+        sysInfoQuery,
+        smart_parametersQuery,
+    ];
+    const multiFieldQueries = [
+        smart_AttributesQuery,
+        taskQuery
+    ]
     try {
-        let queries = [
-            loggerWrapper(log,eraseQuery,report_id,parsedXMLData),
-            loggerWrapper(log,deviceQuery,report_id,device),
-            loggerWrapper(log,resultsQuery,report_id,parsedXMLData),
-            loggerWrapper(log,errorQuery,report_id,parsedXMLData),
-            loggerWrapper(log,killDiskQuery,report_id,parsedXMLData),
-            loggerWrapper(log,sysInfoQuery,report_id,parsedXMLData),
-            loggerWrapper(log,taskQuery,report_id,parsedXMLData),
-        ];
-        if(device){
-            let smartAttr = device['smart-attributes']
-            if(smartAttr){
-                let smartAttr = smart_AttributesQuery(report_id,device)
-                if(Array.isArray(smartAttr)){
-                    queries.push(...smartAttr)
-                }
-            }
-            if(device?.["smart-parameters"]){
-                queries.push(smart_parametersQuery(report_id,device))
-            }
-        }
+        let queries = singleFieldQueries
+            .map((query:any) => query(report_id,parsedXMLData,log))
+        multiFieldQueries
+            .map((query:any) => query(report_id,parsedXMLData,log))
+            .filter((query:any) => query !== undefined)
+            .forEach(query => queries.push(...query));
         return queries.filter((query:any)=>query !== undefined)
     } catch (error) {
-        console.error(error);
+        log(`${error}`);
         return error;
     }
 }

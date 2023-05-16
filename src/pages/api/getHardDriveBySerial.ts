@@ -33,7 +33,7 @@ async function handleQuery (queryParams,res) {
         results:results.rows?.[0],
         smartAttributes:smartAttributes.rows?.[0],
         smartParameters:smartParameters.rows?.[0],
-        tasks:tasks.rows?.[0]
+        tasks:tasks.rows
     }
 }
 

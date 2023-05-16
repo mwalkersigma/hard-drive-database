@@ -19,12 +19,12 @@ export default function buildHardDriveQuery (parsedJSON:reportData){
         VALUES($1,$2,$3,$4,$5,$6)
         RETURNING report_id;
         `
-    return [[query,[date,provider,kernel_version,title,file_name,company]],(report_id:any,pool:any,log:string)=>{
+    return [[query,[date,provider,kernel_version,title,file_name,company]],(report_id:any,pool:any,log:(message:string)=>void)=>{
         const queries:any = buildHardDriveQueryHelper(report_id,parsedJSON,log);
         if(!isIterable(queries))return;
         for(let [qString,qParam] of queries){
             pool.query(qString,qParam)
-                .catch((err:any)=>console.warn(err))
+                .catch((err:any)=>log(err))
         }
     }]
 }
