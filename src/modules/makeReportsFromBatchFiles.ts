@@ -1,8 +1,3 @@
-import convert from "xml-js";
-import jsonFormatter from "./xmljsonFormatter";
-
-
-
 function makeReportsFromBatch(formattedJson:any){
     let batchReport = {
         created: "",
@@ -46,16 +41,26 @@ function makeReportsFromBatch(formattedJson:any){
                 value:"",
             },
             device:{
-                name:"",
-                serial_number:"",
-                platform_name:"",
-                product_name:"",
-                type:"",
-                product_version:"",
-                partitioning:"",
-                total_sectors:"",
-                first_sector:"",
-                bytes_per_sector:"",
+                title:{Name:""},
+                "serial-number":{"Serial Number":""},
+                "platformname":{"Platform Name":""},
+                product:{"Product Name":""},
+                type:{type:""},
+                revision:{"Product Revision":""},
+                geometry:{
+                    partitioning:{
+                        Partitioning:""
+                    },
+                    'total-sec':{
+                        "Total Sectors":""
+                    },
+                    'first-sec':{
+                        "First Sector":""
+                    },
+                    'bps':{
+                        "Bytes per Sector":""
+                    }
+                },
             },
             erase:{
                 method:"",
@@ -140,16 +145,16 @@ function makeReportsFromBatch(formattedJson:any){
         let testBay = formattedJson.report['bays']['bay'][i];
         template.title = testBay.title;
 
-        template.device.name = testBay.device.title["Name"];
-        template.device.serial_number = testBay.device['serial-number']['Serial Number'];
-        template.device.platform_name = testBay.device['platformname']['Platform Name'];
-        template.device.product_name = testBay.device['product']['Product Name'];
-        template.device.type = testBay.device['type']['Type'];
-        template.device.product_version = "N/A";
-        template.device.partitioning = testBay.device.geometry['partitioning']['Partitioning'];
-        template.device.total_sectors = testBay.device.geometry['total-sec']['Total Sectors'];
-        template.device.first_sector = testBay.device.geometry['first-sec']['First Sector'];
-        template.device.bytes_per_sector = testBay.device.geometry['bps']['Bytes per Sector'];
+        template.device.title.Name = testBay.device.title["Name"];
+        template.device["serial-number"]["Serial Number"] = testBay.device['serial-number']['Serial Number'];
+        template.device.platformname["Platform Name"] = testBay.device['platformname']['Platform Name'];
+        template.device.product["Product Name"] = testBay.device['product']['Product Name'];
+        template.device.type.type = testBay.device['type']['Type'];
+        template.device.revision["Product Revision"] = "N/A";
+        template.device.geometry.partitioning.Partitioning = testBay.device.geometry['partitioning']['Partitioning'];
+        template.device.geometry["total-sec"]["Total Sectors"] = testBay.device.geometry['total-sec']['Total Sectors'];
+        template.device.geometry["first-sec"]["First Sector"] = testBay.device.geometry['first-sec']['First Sector'];
+        template.device.geometry.bps["Bytes per Sector"] = testBay.device.geometry['bps']['Bytes per Sector'];
 
         template.smart_parameters.device_model = testBay.device['smart-parameters']['Device Model'];
         template.smart_parameters.firmware_version = testBay.device['smart-parameters']['Firmware Version'];
