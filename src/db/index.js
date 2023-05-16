@@ -30,5 +30,20 @@ module.exports = {
         `
         console.log(logString)
         return pool.query(text, params);
+    },
+    mock: (text, params) =>{
+        console.log('Mocking query')
+        console.log(text)
+        console.log(params)
+        return new Promise((resolve, reject) => {
+            resolve({
+                rows: [
+                    {
+                        id: 1,
+                        name: 'test'
+                    }
+                ]
+            })
+        })
     }
 };

@@ -33,13 +33,13 @@ function buildBatchQuery(inputData:[BatchReport,{}[],[][]]){
         batchReport.result
     ];
     let reportQuery = `
-    INSERT INTO report (batch_report_id,created,provider,kernel_version,title,file_name,company)
+    INSERT INTO report (batch_report_id,created,provider,kernel_version,title,file_name,customer)
     VALUES ($1,$2,$3,$4,$5,$6,$7)
     RETURNING report_id;
     `;
 
     let taskQuery = `
-    INSERT INTO batch_task (batch_report_id,task_title,task_data)
+    INSERT INTO batch_tasks (batch_report_id,title,data,batch_tasks_id)
     VALUES ($1,$2,$3);
     `;
     return [[batchQuery,batchQueryValues],reportQuery,taskQuery];

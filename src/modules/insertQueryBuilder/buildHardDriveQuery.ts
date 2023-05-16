@@ -15,12 +15,12 @@ export default function buildHardDriveQuery (parsedJSON:reportData){
     const company = parsedJSON?.company ?? defaults.STRING;
     let query =
         `
-        INSERT INTO report (created,provider,kernel_version,title,file_name,company)
+        INSERT INTO report (created,provider,kernel_version,title,file_name,customer)
         VALUES($1,$2,$3,$4,$5,$6)
         RETURNING report_id;
         `
-    return [[query,[date,provider,kernel_version,title,file_name,company]],(report_id:any,pool:any)=>{
-        const queries:any = buildHardDriveQueryHelper(report_id,parsedJSON);
+    return [[query,[date,provider,kernel_version,title,file_name,company]],(report_id:any,pool:any,log:string)=>{
+        const queries:any = buildHardDriveQueryHelper(report_id,parsedJSON,log);
         if(!isIterable(queries))return;
         for(let [qString,qParam] of queries){
             pool.query(qString,qParam)

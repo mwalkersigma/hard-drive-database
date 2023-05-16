@@ -1,0 +1,13 @@
+DROP TABLE batch_report;
+DROP TABLE batch_tasks;
+DROP TABLE report;
+DROP TABLE conclusion;
+DROP TABLE device;
+DROP TABLE erase;
+DROP TABLE errors;
+DROP TABLE kill_disk;
+DROP TABLE results;
+DROP TABLE smart_attributes;
+DROP TABLE smart_parameters;
+DROP TABLE sys_info;
+DROP TABLE tasks;
