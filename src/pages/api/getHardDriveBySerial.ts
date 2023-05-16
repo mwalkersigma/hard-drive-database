@@ -20,6 +20,7 @@ async function handleQuery (queryParams,res) {
     const smartAttributes = await db.query(`SELECT * FROM smart_attributes WHERE report_id = $1`,[reportId]);
     const smartParameters = await db.query(`SELECT * FROM smart_parameters WHERE report_id = $1`,[reportId]);
     const report = await db.query(`SELECT * FROM report WHERE report_id = $1`,[reportId]);
+    const tasks = await db.query(`SELECT * FROM tasks WHERE report_id = $1`,[reportId]);
 
     // Here is where getting multiple results would be handled on the backend
     return {
@@ -31,7 +32,8 @@ async function handleQuery (queryParams,res) {
         killDisk:killDisk.rows?.[0],
         results:results.rows?.[0],
         smartAttributes:smartAttributes.rows?.[0],
-        smartParameters:smartParameters.rows?.[0]
+        smartParameters:smartParameters.rows?.[0],
+        tasks:tasks.rows?.[0]
     }
 }
 

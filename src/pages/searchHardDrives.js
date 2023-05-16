@@ -21,7 +21,6 @@ function HardDriveDataDisplay ({hardDrive}) {
         formatted[fieldKey]=rows;
         rows = [];
     })
-    console.log(formatted)
     return (
         hardDrive &&
         <Form className={"p-5"}>
@@ -47,14 +46,27 @@ function HardDriveDataDisplay ({hardDrive}) {
     )
 }
 
+
+
 function SearchHardDrives() {
     const [resultsVisible,setResultsVisible] = useState(false);
     const [hardDrive,setHardDrive] = useState({})
     const [userSearch,setUserSearch] = useState("")
 
     const getSomeData = async ()=> {
-        const res = await fetch(`http://localhost:3000/api/getHardDriveBySerial?serial_number=${userSearch}`);
+        // get the host name from process.env
+        let hostname,port;
+        if(typeof window !== 'undefined') {
+            hostname = window.location.hostname;
+            port = window.location.port;
+        }
+        let searchURL = `http://${hostname}:${port}/api/getHardDriveBySerial?serial_number=${userSearch}`;
+        const res = await fetch(searchURL);
         const data = await res.json();
+        if(data?.text==="Serial number not found"){
+            alert("Serial number not found");
+            return;
+        }
         setHardDrive(JSON.parse(data));
 
     }

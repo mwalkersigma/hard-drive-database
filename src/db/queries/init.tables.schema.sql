@@ -5,11 +5,10 @@ CREATE TABLE batch_report
     provider        varchar(50) NOT NULL,
     version         varchar(50) NOT NULL,
     kernel_version  varchar(50) NOT NULL,
-    started         date NOT NULL,
-    elapsed         date NOT NULL,
+    started         varchar(50) NOT NULL,
+    elapsed         varchar(50) NOT NULL,
     "result"        text NOT NULL
 );
-
 CREATE TABLE batch_tasks
 (
     batch_tasks_id  bigserial NOT NULL PRIMARY KEY,
@@ -22,7 +21,7 @@ CREATE TABLE report
     report_id       bigserial NOT NULL PRIMARY KEY,
     created         varchar(100) NOT NULL,
     provider        varchar(100) NOT NULL,
-    kernel_version  varchar(20) NOT NULL,
+    kernel_version  varchar(100) NOT NULL,
     title           varchar(100) NOT NULL,
     customer        varchar(100) NULL,
     file_name varchar(250),
@@ -34,24 +33,20 @@ CREATE TABLE conclusion
     report_id       bigint NULL REFERENCES report ( report_id ),
     batch_report_id bigint NULL REFERENCES batch_report ( batch_report_id )
 );
-
 CREATE TABLE device
 (
-    name             varchar(20) NOT NULL,
-    serial_number    varchar(20) NOT NULL,
+    name             varchar(100) NOT NULL,
+    serial_number    varchar(100) NOT NULL,
     platform_name    varchar(50) NOT NULL,
     product_name     varchar(50) NOT NULL,
-    type             varchar(20) NOT NULL,
-    product_revision varchar(10) NOT NULL,
+    type             varchar(100) NOT NULL,
+    product_revision varchar(255) NOT NULL,
     partitioning     varchar(50) NOT NULL,
-    total_sectors    varchar(20) NOT NULL,
+    total_sectors    varchar(100) NOT NULL,
     first_sector     int NOT NULL,
     bytes_per_sector int NOT NULL,
     report_id        bigint NOT NULL REFERENCES report ( report_id )
 );
-
-
-
 CREATE TABLE erase
 (
     method       varchar(250) NOT NULL,
@@ -59,7 +54,6 @@ CREATE TABLE erase
     verification varchar(3) NOT NULL,
     report_id    bigint NOT NULL REFERENCES report ( report_id )
 );
-
 CREATE TABLE errors
 (
     lock_source     varchar(3) NOT NULL,
@@ -67,14 +61,13 @@ CREATE TABLE errors
     error_limit     int NOT NULL,
     skip            int NOT NULL,
     timeout         int NOT NULL,
-    terminate       varchar(20) NOT NULL,
+    terminate       varchar(100) NOT NULL,
     ignore_lock     varchar(3) NOT NULL,
     ignore_read     varchar(3) NOT NULL,
     ignore_write    varchar(3) NOT NULL,
     report_id       bigint NULL REFERENCES report ( report_id ),
     batch_report_id bigint NULL REFERENCES batch_report ( batch_report_id )
 );
-
 CREATE TABLE kill_disk
 (
     process_integrity varchar(100) NOT NULL,
@@ -85,7 +78,6 @@ CREATE TABLE kill_disk
     range_total       varchar(30) NOT NULL,
     report_id         bigint NOT NULL REFERENCES report ( report_id )
 );
-
 CREATE TABLE results
 (
     start_at        varchar(255) NOT NULL,
@@ -96,9 +88,6 @@ CREATE TABLE results
     report_id       bigint NOT NULL REFERENCES report ( report_id )
 
 );
-
-
-
 CREATE TABLE smart_attributes
 (
     report_id   bigint NOT NULL REFERENCES report ( report_id ),
@@ -106,14 +95,11 @@ CREATE TABLE smart_attributes
     value       int NOT NULL,
     worst       int NOT NULL,
     threshold   int NOT NULL,
-    attr_type   varchar(20) NOT NULL,
-    updated     varchar(10) NOT NULL,
-    when_failed varchar(10) NOT NULL,
+    attr_type   varchar(100) NOT NULL,
+    updated     varchar(255) NOT NULL,
+    when_failed varchar(255) NOT NULL,
     raw_value   varchar(50) NOT NULL
 );
-
-
-
 CREATE TABLE smart_parameters
 (
     report_id                            bigint NOT NULL REFERENCES report ( report_id ),
@@ -132,9 +118,6 @@ CREATE TABLE smart_parameters
     short_self_test_time_min             int NOT NULL,
     extended_self_test_time_min          int NOT NULL
 );
-
-
-
 CREATE TABLE sys_info
 (
     report_id    bigint NOT NULL REFERENCES report ( report_id ),
@@ -144,9 +127,6 @@ CREATE TABLE sys_info
     admin_rights varchar(255) NOT NULL,
     hostname     varchar(255) NOT NULL
 );
-
-
-
 CREATE TABLE tasks
 (
     task_id SERIAL PRIMARY KEY,

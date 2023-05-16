@@ -24,11 +24,14 @@ const pool = new Pool({
 
 module.exports = {
     query: (text, params) =>{
+
         let logString = `
-            Query: ${text}
-            Params: ${params}
+        Query: ${text}
+        Params: ${params}
         `
-        console.log(logString)
+        if(process.env.NODE_ENV === "development"){
+            console.log(logString)
+        }
         return pool.query(text, params);
-    }
+    },
 };

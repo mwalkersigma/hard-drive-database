@@ -13,7 +13,7 @@ read -r -p "Enter company name: " company_name
 for file in "$temp_folder_path"/*; do
       # Upload file to API
       # this is how the file gets to my server
-      curl -X POST -F "file=@$file" "$api_url/api/addHardDrive?company_name=$company_name&name=$file"
+      curl -X POST -T "$file" "$api_url/api/addHardDrive?company_name=$company_name&name=$file"
       # if this is doug reading this is where you would put the code to move the file to long term storage
       # and rename the file however you want
       extension="${file##*.}"

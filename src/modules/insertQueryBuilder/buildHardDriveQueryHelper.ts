@@ -1,12 +1,9 @@
 export const defaults = {
     STRING:"not specified",
     INT:0,
-    SHORT_STRING:"N/A"
+    SHORT_STRING:"N/A",
+    JSON:"{}",
 }
-
-
-
-
 
 interface EraseData {
     method:string | null,
@@ -147,8 +144,8 @@ export interface reportData {
 const eraseQuery = (report_id:number,rawData:any) => {
     const data = rawData?.erase;
     if(!data) return console.warn("ERASE QUERY : erase data not found");
-    const method = data?.method  ?? defaults.STRING;
-    const passes  = data?.passes ?? defaults.INT
+    const method = data?.method  || defaults.STRING;
+    const passes  = data?.passes || defaults.INT
     const verification = data?.verification ?? defaults.SHORT_STRING;
     let query =
         `INSERT INTO erase ( report_id, method, passes, verification) VALUES (${report_id}, $1, $2, $3)`;
@@ -189,7 +186,7 @@ const errorQuery = (report_id:number,rawData:any) => {
     return [query,values];
 }
 const deviceQuery = (report_id:number,rawData:any) => {
-    const device = rawData?.device;
+    const device = rawData;
     if(!device) return console.warn("DEVICE QUERY : data not found");
     const title = device?.title?.Name ?? defaults.STRING;
     const serialNumber = device?.['serial-number']?.['Serial Number'] ?? defaults.STRING;
@@ -210,11 +207,11 @@ const deviceQuery = (report_id:number,rawData:any) => {
 const resultsQuery = (report_id:number,rawData:any) => {
     const results = rawData?.results;
     if(!results) return console.warn("RESULTS QUERY : data not found");
-    const startedAt = results?.started["Started at"] ?? defaults.STRING;
+    const startedAt = results?.started?.["Started at"] ?? defaults.STRING;
     const duration = results?.elapsed?.Duration ?? defaults.STRING;
-    const errors = results?.process.errors?.Errors ?? defaults.STRING;
-    const name = results?.process.name.Name ?? defaults.STRING;
-    const result = results?.process.result.Result ?? defaults.STRING;
+    const errors = results?.process?.errors?.Errors ?? defaults.STRING;
+    const name = results?.process?.name.Name ?? defaults.STRING;
+    const result = results?.process?.result.Result ?? defaults.STRING;
     const queryString =
         `INSERT INTO results ( report_id, start_at, duration, process_errors, process_name, process_results)
         VALUES (${report_id}, $1, $2, $3, $4, $5)`;
@@ -277,28 +274,44 @@ const smart_parametersQuery = (report_id:number,rawData:any) => {
         VALUES (${report_id},$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14);`,
         [deviceModel,firmwareVersion,capacity,ataVersion,ataStandard,smartSupport,offlineDataCollectionStatus,selfTestExecutionStatus,timeOfflineDataCollection,offlineDataCollectionCapability,smartCapability,errorLoggingCapability,shortSelfTestTime,extendedSelfTestTime]
     ]
-
-
-
 }
+
+const taskQuery = (report_id:number,rawData:any) => {
+    const task = rawData?.tasks;
+    if(!task) return console.warn("TASKS : data not found");
+    return task.map((task:any) => {
+        let taskTitle = task?.title ?? defaults.STRING;
+        let taskData = task?.data ?? defaults.JSON;
+        let queryString = `INSERT INTO tasks (report_id, task_title, task_data) VALUES (${report_id},$1,$2);`
+        let queryValues = [taskTitle,taskData];
+        return [queryString,queryValues];
+    })
+}
+function loggerWrapper (log:string,cb:any,...rest:any) {
+    log += ` ${rest.join(" ")}`
+    return cb(...rest);
+}
+
 /**
  * @name buildHardDriveQueryHelper
  * @description Builds the queries for inserting hardrives into the database
  * @description takes in the parsed XML data in the form of a JSON object
  * @param {number} report_id
  * @param {JSON} parsedXMLData
+ * @param {string} log
  * @returns {Array} Array of queries and values to be inserted into the database
  */
-function buildHardDriveQueryHelper (report_id:number,parsedXMLData:any) {
+function buildHardDriveQueryHelper (report_id:number,parsedXMLData:any,log:string) {
     const device = parsedXMLData?.device;
     try {
         let queries = [
-            eraseQuery(report_id,parsedXMLData),
-            deviceQuery(report_id,parsedXMLData),
-            resultsQuery(report_id,parsedXMLData),
-            errorQuery(report_id,parsedXMLData),
-            killDiskQuery(report_id,parsedXMLData),
-            sysInfoQuery(report_id,parsedXMLData),
+            loggerWrapper(log,eraseQuery,report_id,parsedXMLData),
+            loggerWrapper(log,deviceQuery,report_id,device),
+            loggerWrapper(log,resultsQuery,report_id,parsedXMLData),
+            loggerWrapper(log,errorQuery,report_id,parsedXMLData),
+            loggerWrapper(log,killDiskQuery,report_id,parsedXMLData),
+            loggerWrapper(log,sysInfoQuery,report_id,parsedXMLData),
+            loggerWrapper(log,taskQuery,report_id,parsedXMLData),
         ];
         if(device){
             let smartAttr = device['smart-attributes']

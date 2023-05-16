@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test-script": "node ./src/scripts/convertBatchToSingleReport.js"
   },
   "dependencies": {
     "@types/node": "20.0.0",
@@ -24,5 +25,8 @@
     "typescript": "5.0.4",
     "vitest": "^0.31.0",
     "xml-js": "^1.6.11"
+  },
+  "devDependencies": {
+    "node-fetch": "^3.3.1"
   }
 }
