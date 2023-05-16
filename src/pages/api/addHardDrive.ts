@@ -2,8 +2,7 @@ import parseXMLFile from "../../modules/parseXMLFile";
 import buildHardDriveQuery from "../../modules/insertQueryBuilder/buildHardDriveQuery";
 import db from "../../db/index";
 import makeReportsFromBatch from "../../modules/makeReportsFromBatchFiles";
-import buildBatchQuery from "../../modules/insertQueryBuilder/buildBatchQuery";
-
+import buildBatchQuery, {BatchReport} from "../../modules/insertQueryBuilder/buildBatchQuery";
 const addBatchReportIdQuery :string = `UPDATE report SET batch_report_id = $1 WHERE report_id = $2;`
 function handleSingleReport (parsedFile:any,name:string,company:string,log:string) {
     // this returns a [string,string[]] and a callback function
@@ -24,10 +23,8 @@ function handleSingleReport (parsedFile:any,name:string,company:string,log:strin
 
 }
 function handleBatchReport (parsedFile:any,name:string,company:string,log:string){
-
-    let reports = makeReportsFromBatch(parsedFile) as [{},{}[],{task_title:string,task_data:any}[]];
-    const [batchReportObject,reportQueries,taskQueries] = reports
-    let addBatchReportQuery = buildBatchQuery(batchReportObject);
+    const [batchReportObject,reportQueries,taskQueries] = makeReportsFromBatch(parsedFile) as [BatchReport,{}[],{task_title:string,task_data:any}[]];
+    const addBatchReportQuery = buildBatchQuery(batchReportObject);
     log += `Batch Report: ${batchReportObject}\n`;
     return db
         .query(...addBatchReportQuery)

@@ -1,7 +1,8 @@
 export const defaults = {
     STRING:"not specified",
     INT:0,
-    SHORT_STRING:"N/A"
+    SHORT_STRING:"N/A",
+    JSON:"{}",
 }
 
 interface EraseData {
@@ -275,6 +276,16 @@ const smart_parametersQuery = (report_id:number,rawData:any) => {
     ]
 }
 
+const taskQuery = (report_id:number,rawData:any) => {
+    const task = rawData?.tasks;
+    if(!task) return console.warn("TASKS : data not found");
+    return task.map((task:any) => {
+        let taskTitle = task?.title ?? defaults.STRING;
+        let taskData = task?.data ?? defaults.JSON;
+        let queryString = `INSERT INTO tasks (report_id, task_title, task_data) VALUES (${report_id},$1,$2);`
+        let queryValues = [taskTitle,taskData];
+    })
+}
 function loggerWrapper (log:string,cb:any,...rest:any) {
     log += ` ${rest.join(" ")}`
     return cb(...rest);
@@ -299,6 +310,7 @@ function buildHardDriveQueryHelper (report_id:number,parsedXMLData:any,log:strin
             loggerWrapper(log,errorQuery,report_id,parsedXMLData),
             loggerWrapper(log,killDiskQuery,report_id,parsedXMLData),
             loggerWrapper(log,sysInfoQuery,report_id,parsedXMLData),
+            loggerWrapper(log,taskQuery,report_id,parsedXMLData),
         ];
         if(device){
             let smartAttr = device['smart-attributes']

@@ -9,7 +9,7 @@ tasks
  */
 import {parseDateFromXML} from "../parseDateFromXML";
 
-interface BatchReport {
+export interface BatchReport {
     result: any;
     elapsed: any;
     started: any;
@@ -18,7 +18,7 @@ interface BatchReport {
     provider: any;
     created: any;
 }
-export default function buildBatchQuery(batchReport:any,){
+export default function buildBatchQuery(batchReport:BatchReport,){
     let batchQuery = `
     INSERT INTO batch_report (created,provider,version,kernel_version,started,elapsed,result)
     VALUES ($1,$2,$3,$4,$5,$6,$7)
