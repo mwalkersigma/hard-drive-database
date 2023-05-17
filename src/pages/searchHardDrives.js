@@ -1,7 +1,7 @@
 import Container from "react-bootstrap/Container";
 import {Accordion, Button, Col, Form, Row} from "react-bootstrap";
 import {useState} from "react";
-import {type} from "os";
+import {toHeaderCase} from 'js-convert-case'
 
 
 
@@ -37,8 +37,8 @@ function HardDriveDataDisplay ({hardDrive}) {
                                             <Row key={j}>
                                                 {rowItem.map(({itemKey, itemValue}, k) => (
                                                     <Form.Group key={k} as={Col} controlId="formGridManufacturer">
-                                                        <Form.Label>{itemKey}</Form.Label>
-                                                        <Form.Control readOnly disabled type="text" value={itemValue}/>
+                                                        <Form.Label className={"fs-4 pb-1"}>{toHeaderCase(itemKey)}</Form.Label>
+                                                        <Form.Control className={"pb-1"} readOnly disabled type="text" value={itemValue}/>
                                                     </Form.Group>
                                                 ))}
                                             </Row>)
@@ -69,7 +69,6 @@ function handleTasks(tasks){
     return temp;
 }
 function TaskDisplay({tasks}){
-    console.log(handleTasks(tasks));
     return (
         <Accordion className={"pb-5 px-5"} defaultActiveKey="0">
             {tasks && tasks.map((task,index)=>{
@@ -81,7 +80,7 @@ function TaskDisplay({tasks}){
                                 return (<Container key={j}>
                                     <Row className={"pb-1"}>
                                         <Form.Label>{k}</Form.Label>
-                                        <Form.Control readOnly disabled type="text" value={v}/>
+                                        <Form.Control readOnly disabled type="text" value={toHeaderCase(v)}/>
                                     </Row>
                                 </Container>)
                                 })
@@ -92,7 +91,6 @@ function TaskDisplay({tasks}){
                 )}
             )}
         </Accordion>
-
     )
 }
 
@@ -116,6 +114,7 @@ function SearchHardDrives() {
             return;
         }
         setHardDrive(JSON.parse(data));
+        console.log(hardDrive);
     }
 
     return (
@@ -145,8 +144,8 @@ function SearchHardDrives() {
             </Container>
             <hr/>
             {resultsVisible && <HardDriveDataDisplay hardDrive={hardDrive}/>}
-            {resultsVisible && hardDrive.tasks && <h1 className={"px-5 pb-5 h1"}>TASKS</h1>}
-            {resultsVisible && <TaskDisplay tasks={hardDrive.tasks}/>}
+            {resultsVisible && hardDrive.tasks.length > 0 && <h1 className={"px-5 pb-5 h1"}>TASKS</h1>}
+            {resultsVisible && hardDrive.tasks.length > 0 && <TaskDisplay tasks={hardDrive.tasks}/>}
             <br/>
             <br/>
             <br/>
