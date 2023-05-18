@@ -7,7 +7,7 @@ import fetch from "node-fetch";
 fs.readFile(file, 'utf8', (err, data) => {
     //send http POST request to database
     console.log(file);
-    fetch(`http://localhost:3000/api/addHardDrive?name=${file}&company_name=sigma`, {
+    fetch(`http:/10.1.19.192:3000/api/addHardDrive?name=${file}&company_name=sigma`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/xml'
