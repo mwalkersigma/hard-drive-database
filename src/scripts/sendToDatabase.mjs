@@ -14,16 +14,16 @@ fs.readFile(file, 'utf8', (err, data) => {
         },
         body: data
     })
-        .then(()=>{})
+        .then((res)=>{console.log(res)})
 })
 
 /*
 using this command from the command line
 # This path is path to xml folder
-for f in /Users/michaelwalker/Desktop/XML/*(.)
+for f in /Users/mwalker/Desktop/XML/*(.)
 do
 # this path is to the scripts folder in hard-drive-database
-node /Users/michaelwalker/Desktop/hard-drive-database/src/scripts/sendToDatabase.mjs $f
+node /Users/mwalker/Desktop/hard-drive-database/src/scripts/sendToDatabase.mjs $f
 done
 
  */
