@@ -1,5 +1,6 @@
-import db from "../../db/index";
-
+import DB from "../../db/index";
+import Logger from "../../modules/logger";
+const db = {query:DB.query(new Logger().log)};
 // @ts-ignore
 async function handleQuery (queryParams,res) {
     const {serial_number} = queryParams;
@@ -45,6 +46,7 @@ export default function handler (req,res) {
     try {
        return handleQuery(queryParams,res)
             .then((data) => {
+                console.log(data)
                return res.status(200).json(JSON.stringify(data))
             })
             .catch((e) => {

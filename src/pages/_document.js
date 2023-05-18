@@ -1,6 +1,6 @@
 import { Html, Head, Main, NextScript } from 'next/document'
 
-import NavBar from "../Components/navBar";
+import NavBar from "../components/navbar";
 
 
 
