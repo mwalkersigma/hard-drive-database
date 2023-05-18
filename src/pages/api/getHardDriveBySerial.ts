@@ -47,16 +47,16 @@ export default function handler (req,res) {
        return handleQuery(queryParams,res)
             .then((data) => {
                 console.log(data)
-               return res.status(200).json(JSON.stringify(data))
+                res.status(200).json(JSON.stringify(data))
             })
             .catch((e) => {
                 console.error(e)
-                return res.status(400).json({text: 'Error'})
+                res.status(400).json({text: 'Error'})
             })
 
 
     }catch (e) {
         console.error(e)
-        return res.status(400).json({text: 'Error'})
+        res.status(400).json({text: 'Error'})
     }
 }
