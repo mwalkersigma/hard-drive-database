@@ -22,16 +22,19 @@ const pool = new Pool({
     connectionTimeoutMillis: 2000,
 });
 
-module.exports = {
-    query: (text, params) =>{
 
-        let logString = `
-        Query: ${text}
-        Params: ${params}
-        `
-        if(process.env.NODE_ENV === "development"){
-            console.log(logString)
-        }
-        return pool.query(text, params);
-    },
+
+module.exports = {
+
+    query(logger=console.log){
+        return (text, params) =>{
+            let logString = `
+            Query: ${text}
+            Params: ${params}
+            `
+            logger(logString);
+            return pool.query(text, params);
+        };
+    }
+
 };

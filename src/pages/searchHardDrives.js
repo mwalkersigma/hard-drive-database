@@ -38,7 +38,7 @@ function HardDriveDataDisplay ({hardDrive}) {
                                                 {rowItem.map(({itemKey, itemValue}, k) => (
                                                     <Form.Group key={k} as={Col} controlId="formGridManufacturer">
                                                         <Form.Label className={"fs-4 pb-1"}>{toHeaderCase(itemKey)}</Form.Label>
-                                                        <Form.Control className={"pb-1"} readOnly disabled type="text" value={itemValue}/>
+                                                        <Form.Control className={"pb-1"} readOnly disabled type="text" value={itemValue ?? "n/a"}/>
                                                     </Form.Group>
                                                 ))}
                                             </Row>)

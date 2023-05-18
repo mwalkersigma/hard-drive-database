@@ -1,10 +1,13 @@
 import parseXMLFile from "../../modules/parseXMLFile";
 import buildHardDriveQuery from "../../modules/insertQueryBuilder/buildHardDriveQuery";
-import db from "../../db/index";
+import DB from "../../db/index";
+import Logger from "../../modules/logger";
+
 import makeReportsFromBatch from "../../modules/makeReportsFromBatchFiles";
 import buildBatchQuery, {BatchReport} from "../../modules/insertQueryBuilder/buildBatchQuery";
-import fs from "fs";
-let logs:any[] = []
+
+let logger = new Logger();
+const db = {query:DB.query(logger.log)};
 const addBatchReportIdQuery :string = `UPDATE report SET batch_report_id = $1 WHERE report_id = $2;`
 function handleSingleReport (parsedFile:any,name:string,company:string,logger:Logger) {
     const {log} = logger;
@@ -22,7 +25,7 @@ function handleSingleReport (parsedFile:any,name:string,company:string,logger:Lo
             subQueriesCallback(reportID,db,log);
         })
         .catch((err:any)=> log(`${err}`))
-        .finally(()=>({log:logger.out()}))
+        .finally(()=>{log("Query Complete")})
 
 }
 function handleBatchReport (parsedFile:any,name:string,company:string,logger:Logger){
@@ -56,23 +59,11 @@ function handleBatchReport (parsedFile:any,name:string,company:string,logger:Log
             })
         })
         .catch((err:any)=> log(`${err}`))
-        .finally(()=>({log:logger.out()}))
+        .finally(()=>{log("Query Complete")})
 
 }
 
-class Logger {
-    out=()=>{
-        return logs.join(' ');
-    }
-    log=(message:any)=>{
-        if(process.env.NODE_ENV === 'development'){
-            let path = `/Users/michaelwalker/desktop/hard-drive-database/src/logs/logs.txt`;
-            let msg = `${message}\n`;
-            let options = {flag:"a"};
-            fs.writeFileSync(path,msg,options);
-        }
-    }
-}
+
 async function run (res:any,req:any){
     let log = new Logger();
     let type : "single" | "batch" = "single";
