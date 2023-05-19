@@ -6,15 +6,16 @@ import fetch from "node-fetch";
 
 fs.readFile(file, 'utf8', (err, data) => {
     //send http POST request to database
+    // if process.env dev send to local host
+    let host = process.env.NODE_ENV === "development" ? "localhost:3000" : "10.1.19.192:3000"
     console.log(file);
-    fetch(`http:/10.1.19.192:3000/api/addHardDrive?name=${file}&company_name=sigma`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/xml'
-        },
-        body: data
+    fetch(`http://localhost:3001`, {
+        method: 'GET',
+        //headers: {'Content-Type': 'application/xml'},
+        //body: data
     })
         .then((res)=>{console.log(res)})
+        .catch(err=>console.log(err))
 })
 
 /*
