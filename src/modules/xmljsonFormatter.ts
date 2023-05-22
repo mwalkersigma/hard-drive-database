@@ -81,6 +81,6 @@ function formatter(input:any, obj:any = {}, subKey:string = "") {
 }
 
 export default function jsonFormatter (input:any) {
-    return jsConvert.toSnakeCase(formatter(input))
+    return jsConvert.snakeKeys(formatter(input),{recursive:true,recursiveInArray:true});
 }
 

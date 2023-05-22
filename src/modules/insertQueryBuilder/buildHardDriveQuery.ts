@@ -1,12 +1,9 @@
-import buildHardDriveQueryHelper, {
-    defaults,
-    reportData
-} from "../../modules/insertQueryBuilder/buildHardDriveQueryHelper"
+import buildHardDriveQueryHelper, {defaults} from "../../modules/insertQueryBuilder/buildHardDriveQueryHelper"
 import {parseDateFromXML} from "../parseDateFromXML";
 function isIterable (input:any) {
     return typeof input[Symbol.iterator] === 'function'
 }
-export default function buildHardDriveQuery (parsedJSON:reportData){
+export default function buildHardDriveQuery (parsedJSON:any){
     const date = parseDateFromXML(parsedJSON.created);
     const provider = parsedJSON?.provider ?? defaults.STRING ;
     const kernel_version = parsedJSON?.kernel_version ?? defaults.STRING;
