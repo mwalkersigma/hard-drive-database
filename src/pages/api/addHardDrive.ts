@@ -1,5 +1,4 @@
 import parseXMLFile from "../../modules/parseXMLFile";
-import buildHardDriveQuery from "../../modules/insertQueryBuilder/buildHardDriveQuery";
 import validateRequest from "../../modules/validateRequest";
 import handleRes from "../../modules/handleRes";
 import db from "../../db";
@@ -30,8 +29,6 @@ async function handledDifferent (req:any,res:any) {
     const reportType:string = determineReportType(parsedReportFile);
     let handlers : Handlers  = {single:handleSingleReport,batch:handleBatchReport};
     db.logger.log(`Handling ${reportType} report`);
-
-
     return handlers[reportType](parsedReportFile,db.logger.log)
 
 

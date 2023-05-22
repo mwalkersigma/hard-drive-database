@@ -1,6 +1,6 @@
-import DB from "../../db/index";
-import Logger from "../../modules/logger";
-const db = {query:DB.query(new Logger().log)};
+import db from "../../db/index";
+
+
 // @ts-ignore
 async function handleQuery (queryParams,res) {
     const {serial_number} = queryParams;
@@ -22,6 +22,7 @@ async function handleQuery (queryParams,res) {
     const smartParameters = await db.query(`SELECT * FROM smart_parameters WHERE report_id = $1`,[reportId]);
     const report = await db.query(`SELECT * FROM report WHERE report_id = $1`,[reportId]);
     const tasks = await db.query(`SELECT * FROM tasks WHERE report_id = $1`,[reportId]);
+    const conclusion = await db.query(`SELECT * FROM conclusion WHERE report_id = $1`,[reportId]);
 
     // Here is where getting multiple results would be handled on the backend
     return {
@@ -32,9 +33,10 @@ async function handleQuery (queryParams,res) {
         sysinfo:sysinfo.rows?.[0],
         killDisk:killDisk.rows?.[0],
         results:results.rows?.[0],
-        smartAttributes:smartAttributes.rows?.[0],
+        smartAttributes:smartAttributes.rows,
         smartParameters:smartParameters.rows?.[0],
-        tasks:tasks.rows
+        tasks:tasks.rows,
+        conclusion:conclusion.rows?.[0]
     }
 }
 
