@@ -4,6 +4,7 @@ import handleRes from "../../modules/handleRes";
 import db from "../../db";
 import handleSingleReport from "../../modules/xmlFileHandler/reportHandler";
 import handleBatchReport from "../../modules/xmlFileHandler/batchHandler";
+import getDateString from "../../modules/getDateString";
 
 
 interface Handlers {
@@ -36,6 +37,7 @@ async function handledDifferent (req:any,res:any) {
 
 export default function handler (req:any,res:any) {
     let responder = handleRes(res);
+    db.logger.log(`request started at : ${getDateString()}`)
     return handledDifferent(req,res)
         .then(()=>{
             responder(200,"File Successfully parsed");

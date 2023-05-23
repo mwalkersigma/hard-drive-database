@@ -1,4 +1,5 @@
 import db from "../../db/index";
+import getDateString from "../../modules/getDateString";
 
 
 // @ts-ignore
@@ -45,6 +46,7 @@ async function handleQuery (queryParams,res) {
 export default function handler (req,res) {
     let queryParams = req.query;
     if(!queryParams)return res.status(400).json({text: 'Query is required'})
+    db.logger.log(`request started at : ${getDateString()}`)
     try {
        return handleQuery(queryParams,res)
             .then((data) => {
