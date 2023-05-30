@@ -51,7 +51,7 @@ export default function HardDriveDataDisplay({hardDrive,children}: any) {
                             )
                         }
                     })}
-                    {hardDrive.smartAttributes && children }
+                    {hardDrive.smartAttributes.length > 0 && children }
                 </Form>
             </Container>
 

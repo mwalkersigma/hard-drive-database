@@ -27,6 +27,7 @@ async function handledDifferent (req:any,res:any) {
     const parsedReportFile:any = parseXMLFile(req.body);
     parsedReportFile.report.name = req.query.name;
     parsedReportFile.report.company = req.query.company;
+    console.log(req.query.name)
     const reportType:string = determineReportType(parsedReportFile);
     let handlers : Handlers  = {single:handleSingleReport,batch:handleBatchReport};
     db.logger.log(`Handling ${reportType} report`);

@@ -6,10 +6,7 @@ export default class Logger {
         let sysPath = getDirName(__dirname).split(path.sep + ".next")[0];
         const sep = path.sep;
         let date = new Date().toLocaleDateString().split("/").join("-");
-        let filePath = `${sysPath}${sep}src${sep}logs${sep}log.log`;
-        if(process.env.NODE_ENV !== 'development'){
-            filePath = `${sysPath}${sep}src${sep}logs${sep}${date}-log.log`;
-        }
+        let filePath = `${sysPath}${sep}src${sep}logs${sep}${date}-log.log`;
         let msg = `${message}\n`;
         let options = {flag:"a"};
         fs.writeFileSync(filePath,msg,options);

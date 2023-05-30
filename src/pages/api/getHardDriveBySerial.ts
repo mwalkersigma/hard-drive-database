@@ -1,18 +1,33 @@
 import db from "../../db/index";
 import getDateString from "../../modules/getDateString";
+import Search from "../../modules/search/search";
+import NaiveSearch from "../../modules/search/algorithms/naive";
+import FilteredSearch from "../../modules/search/algorithms/filtered";
+import KMPSearch from "../../modules/search/algorithms/kmp";
+import LevenshteinDistanceSearch from "../../modules/search/algorithms/levenschteinDistance";
+import handleRes from "../../modules/handleRes";
 
 
 // @ts-ignore
-async function handleQuery (queryParams,res) {
+async function handleQuery (queryParams,res,search) {
     const {serial_number} = queryParams;
-    let reportIdQuery = await db.query(`
-        SELECT report.report_id 
-        FROM report 
-        INNER JOIN device ON report.report_id = device.report_id
-        WHERE device.serial_number = $1
-        `,[serial_number]);
-    if(reportIdQuery.rows.length === 0) return res.status(400).json({text: 'Serial number not found'})
-    let reportId = reportIdQuery.rows[0].report_id;
+    let allSerials = await db.query(`SELECT serial_number,report_id FROM device;`);
+    let serials = allSerials.rows.map((item:{serial_number:string})=>item.serial_number);
+    // take the collection of {serial_number,report_id} and turn it into a dictionary
+    // with the following shape {serial_number:report_id}
+    let dictionary = allSerials.rows.reduce((acc:any,row:any)=>{
+        //if(acc[row.serial_number])console.log(`Duplicate serial number found: ${row.serial_number} todo`);
+        acc[row.serial_number.toUpperCase()] = row.report_id;
+        return acc;
+    },
+        {})
+    search.init(serials);
+    let result:{matchCandidate:string}|undefined = search.quickSearch(serial_number);
+    if(!result)return [];
+    const {matchCandidate} = result;
+    console.log(`matchCandidate: ${matchCandidate}`)
+    if(!result) handleRes(res)(400,'Serial number not found');
+    let reportId = dictionary[matchCandidate];
     const erase = await db.query(`SELECT * FROM erase WHERE report_id = $1`,[reportId]);
     const device = await db.query(`SELECT * FROM device WHERE report_id = $1`,[reportId]);
     const errors = await db.query(`SELECT * FROM errors WHERE report_id = $1`,[reportId]);
@@ -24,8 +39,6 @@ async function handleQuery (queryParams,res) {
     const report = await db.query(`SELECT * FROM report WHERE report_id = $1`,[reportId]);
     const tasks = await db.query(`SELECT * FROM tasks WHERE report_id = $1`,[reportId]);
     const conclusion = await db.query(`SELECT * FROM conclusion WHERE report_id = $1`,[reportId]);
-
-    // Here is where getting multiple results would be handled on the backend
     return {
         report:report.rows?.[0],
         erase:erase.rows?.[0],
@@ -48,9 +61,15 @@ export default function handler (req,res) {
     if(!queryParams)return res.status(400).json({text: 'Query is required'})
     db.logger.log(`request started at : ${getDateString()}`)
     try {
-       return handleQuery(queryParams,res)
+
+        let search = new Search();
+        search.addAlgorithm(new NaiveSearch());
+        search.addAlgorithm(new FilteredSearch());
+        search.addAlgorithm(new KMPSearch());
+        search.addAlgorithm(new LevenshteinDistanceSearch());
+
+       return handleQuery(queryParams,res,search)
             .then((data) => {
-                console.log(data)
                return res.status(200).json(JSON.stringify(data))
             })
             .catch((e) => {

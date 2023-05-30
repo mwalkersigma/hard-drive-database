@@ -19,20 +19,18 @@ function SearchHardDrives() {
         }
         let searchURL = `http://${hostname}:${port}/api/getHardDriveBySerial?serial_number=${userSearch}`;
         const res = await fetch(searchURL);
+        if(!res)return false;
         const data = await res.json();
-        if(data?.text==="Serial number not found"){
-            alert("Serial number not found");
-            return;
-        }
+        if(JSON.parse(data).length === 0)return false;
         setHardDrive(JSON.parse(data));
-        console.log(hardDrive);
+        return true;
     }
 
     function searchHandler(e){
         e.preventDefault();
         getSomeData()
-            .then(()=>{
-                setResultsVisible(true);
+            .then((status)=>{
+                setResultsVisible(status);
             });
     }
     function handleKeyDown (e){
