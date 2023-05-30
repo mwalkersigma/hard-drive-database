@@ -5,8 +5,12 @@ import SmartAttributesTable from "../smartAttributesTable";
 import TaskDisplay from "../taskDisplay";
 import jsConvert from "js-convert-case";
 
-const searchableFields = ["serial_number"]
-
+const searchableFields = [
+    fieldFactory("serial_number", "device")
+]
+function fieldFactory(field,table){
+    return {field,table}
+}
 export default function HardDriveSearch() {
     // internal state
     const [resultsVisible,setResultsVisible] = useState(false);
@@ -14,17 +18,13 @@ export default function HardDriveSearch() {
     const [hardDriveData,setHardDriveData] = useState({});
     const [searchBy,setSearchBy] = useState("serial_number");
     function chooseTable (field){
-        switch (field) {
-            case "serial_number":
-                return "device";
-            default :
-                return false;
-
-        }
+        let table = searchableFields.find((searchableField) => searchableField.field === field);
+        if(!table)return false;
+        return table.table;
     }
 
     function buildURL () {
-        // takes the user input and builds a url to fetch from
+        // takes the user input and builds a URL to fetch from
         let hostname,port;
         if(typeof window !== "undefined"){
             hostname = window.location.hostname;
@@ -40,7 +40,7 @@ export default function HardDriveSearch() {
 
         let browserPrefix = "http://";
         let address = hostname + ":" + port;
-        let APIAddress = "/api/getHardDriveBySerial";
+        let APIAddress = "/api/getHardDriveByField";
         return  browserPrefix + address + APIAddress + "?" + searchParams.toString();
     }
 
@@ -78,7 +78,7 @@ export default function HardDriveSearch() {
                 <InputGroup>
                     <Form.Control onKeyDown={eventHandler} type="text" placeholder="X4LTT0DAT" onInput={(e)=>setUserSearchString(e.target["value"].toUpperCase())} />
                     <DropdownButton title={jsConvert.toTextCase(searchBy)}>
-                        {searchableFields.map((field,index) => {
+                        {searchableFields.map(({field,table},index) => {
                             return <Dropdown.Item
                                 key={index}
                                 onClick={()=>setSearchBy(field)}>
