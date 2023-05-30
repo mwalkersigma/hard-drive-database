@@ -27,7 +27,7 @@ export default class Search {
         let result;
         if(!this.db)throw new Error("Database not initialized");
         let userQuery = this.searchQueue.shift();
-        if(!userQuery)return result;
+        if(!userQuery)return undefined;
         for(let i = 0 ; i < this.algorithms.length; i++){
             let algorithm = this.algorithms[i];
             result = algorithm.run(userQuery.toUpperCase());

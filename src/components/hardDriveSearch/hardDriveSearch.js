@@ -1,4 +1,4 @@
-import {Container, Button, Form, Table, InputGroup, DropdownButton,Dropdown} from "react-bootstrap"
+import {Container, Button, Form, InputGroup, DropdownButton,Dropdown} from "react-bootstrap"
 import {useState} from "react";
 import HardDriveDataDisplay from "../hardDriveDataDisplay";
 import SmartAttributesTable from "../smartAttributesTable";
@@ -7,7 +7,7 @@ import jsConvert from "js-convert-case";
 
 const searchableFields = ["serial_number"]
 
-export default function HardDriveSearch(props) {
+export default function HardDriveSearch() {
     // internal state
     const [resultsVisible,setResultsVisible] = useState(false);
     const [userSearchString,setUserSearchString] = useState("");
