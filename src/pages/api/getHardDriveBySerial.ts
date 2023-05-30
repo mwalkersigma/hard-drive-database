@@ -10,19 +10,21 @@ import handleRes from "../../modules/handleRes";
 
 // @ts-ignore
 async function handleQuery (queryParams,res,search) {
-    const {serial_number} = queryParams;
-    let allSerials = await db.query(`SELECT serial_number,report_id FROM device;`);
-    let serials = allSerials.rows.map((item:{serial_number:string})=>item.serial_number);
+    let defaults = {field:"serial_number",table:"device"};
+    queryParams = {...defaults,...queryParams};
+    const {value,field,table} = queryParams;
+    let allField = await db.query(`SELECT ${field},report_id FROM ${table};`);
+    let serials = allField.rows.map((item:{serial_number:string})=>item.serial_number);
     // take the collection of {serial_number,report_id} and turn it into a dictionary
     // with the following shape {serial_number:report_id}
-    let dictionary = allSerials.rows.reduce((acc:any,row:any)=>{
+    let dictionary = allField.rows.reduce((acc:any,row:any)=>{
         //if(acc[row.serial_number])console.log(`Duplicate serial number found: ${row.serial_number} todo`);
         acc[row.serial_number.toUpperCase()] = row.report_id;
         return acc;
     },
         {})
     search.init(serials);
-    let result:{matchCandidate:string}|undefined = search.quickSearch(serial_number);
+    let result:{matchCandidate:string}|undefined = search.quickSearch(value);
     if(!result)return [];
     const {matchCandidate} = result;
     console.log(`matchCandidate: ${matchCandidate}`)
