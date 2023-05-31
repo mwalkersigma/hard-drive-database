@@ -18,9 +18,13 @@ export default function SearchInput ({setHardDriveData,setResultsVisible}) {
         if(enterWasPressed || submitWasClicked){
             e.preventDefault(e);
             fetchFromServer()
-                .then(({status,message}) => {
+                .then(result => {
+                    console.log(result);
+                    return result;
+                })
+                .then(({status,msg}) => {
                     setResultsVisible(status)
-                    if(!status)alert(message);
+                    if(!status)alert(msg);
                 })
         }
     }
