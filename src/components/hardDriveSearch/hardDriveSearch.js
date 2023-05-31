@@ -1,105 +1,82 @@
-import {Container, Button, Form, InputGroup, DropdownButton,Dropdown} from "react-bootstrap"
 import {useState} from "react";
-import HardDriveDataDisplay from "../hardDriveDataDisplay";
-import SmartAttributesTable from "../smartAttributesTable";
-import TaskDisplay from "../taskDisplay";
-import jsConvert from "js-convert-case";
+import HardDriveDataDisplay from "./hardDriveDataDisplay";
+import SmartAttributesTable from "./smartAttributesTable";
+import TaskDisplay from "./taskDisplay";
+import SearchInput from "./searchInput";
+import {Tab, Tabs} from "react-bootstrap";
 
-const searchableFields = [
-    fieldFactory("serial_number", "device")
-]
-function fieldFactory(field,table){
-    return {field,table}
+
+
+
+function HardDriveDisplay ({resultsVisible,hardDriveData}) {
+    return (<>
+        {resultsVisible &&
+            <HardDriveDataDisplay hardDrive={hardDriveData}>
+                <SmartAttributesTable hardDrive={hardDriveData} />
+            </HardDriveDataDisplay>}
+        {resultsVisible && hardDriveData.tasks.length > 0 && <h1 className={"px-5 pb-5 h1"}>TASKS</h1>}
+        {resultsVisible && hardDriveData.tasks.length > 0 && <TaskDisplay tasks={hardDriveData.tasks}/>}
+        <br/>
+        <br/>
+        <br/>
+    </>
+    )
+}
+
+function convertDateFormat(inputString) {
+    const date = new Date(inputString);
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = String(date.getFullYear());
+    let hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    let ampm = 'AM';
+
+    if (hours >= 12) {
+        ampm = 'PM';
+        if (hours > 12) {
+            hours -= 12;
+        }
+    }
+
+    hours = String(hours).padStart(2, '0');
+
+    return `${month}-${day}-${year} ${hours}:${minutes}:${seconds} ${ampm}`;
 }
 export default function HardDriveSearch() {
     // internal state
     const [resultsVisible,setResultsVisible] = useState(false);
-    const [userSearchString,setUserSearchString] = useState("");
     const [hardDriveData,setHardDriveData] = useState({});
-    const [searchBy,setSearchBy] = useState("serial_number");
-    function chooseTable (field){
-        let table = searchableFields.find((searchableField) => searchableField.field === field);
-        if(!table)return false;
-        return table.table;
-    }
-
-    function buildURL () {
-        // takes the user input and builds a URL to fetch from
-        let hostname,port;
-        if(typeof window !== "undefined"){
-            hostname = window.location.hostname;
-            port = window.location.port;
-        }
-        // value , field , table are the search params
-        let searchParams = new URLSearchParams();
-        let table = chooseTable(searchBy);
-        if(!table)return false;
-        searchParams.append("value",userSearchString);
-        searchParams.append("field",searchBy);
-        searchParams.append("table",table);
-
-        let browserPrefix = "http://";
-        let address = hostname + ":" + port;
-        let APIAddress = "/api/getHardDriveByField";
-        return  browserPrefix + address + APIAddress + "?" + searchParams.toString();
-    }
-
-    const fetchFromServer = async () => {
-        let URL = buildURL();
-        if(!URL)return {status:false,msg:"improper search params"};
-        const responseFromServer = await fetch(URL);
-        if(!responseFromServer)return {status:false,msg:"Serial Number not found"};
-        const serverJson = await responseFromServer.json();
-        if(typeof serverJson !== "string")return {status:false,msg:"Serial Number not found"};
-        let parsedJson = JSON.parse(serverJson);
-        // if no results were found
-        if(parsedJson.length === 0)return {status:false,msg:"Serial Number not found"};
-        setHardDriveData(parsedJson);
-        return {status:true};
-    };
-    function eventHandler (e){
-        let enterWasPressed = e.type === "keydown" && e.key === "Enter";
-        let submitWasClicked = e.type === "click"
-        if(enterWasPressed || submitWasClicked){
-            e.preventDefault(e);
-            fetchFromServer()
-                .then(({status,message}) => {
-                    setResultsVisible(status)
-                    if(!status)alert(message);
-                })
-        }
-
-    }
     return (
         <>
-            <Container >
-                <br/>
-                <Form.Label>Scan or Enter {jsConvert.toHeaderCase(searchBy)}</Form.Label>
-                <InputGroup>
-                    <Form.Control onKeyDown={eventHandler} type="text" placeholder="X4LTT0DAT" onInput={(e)=>setUserSearchString(e.target["value"].toUpperCase())} />
-                    <DropdownButton title={jsConvert.toTextCase(searchBy)}>
-                        {searchableFields.map(({field,table},index) => {
-                            return <Dropdown.Item
-                                key={index}
-                                onClick={()=>setSearchBy(field)}>
-                                {jsConvert.toTextCase(field)}
-                            </Dropdown.Item>
-                            })
-                        }
-                    </DropdownButton>
-                    <Button  onClick={eventHandler}> Search </Button>
-                </InputGroup>
-            </Container>
+            <SearchInput
+            setResultsVisible={setResultsVisible}
+            setHardDriveData={setHardDriveData}
+            />
             <hr/>
-            {resultsVisible &&
-                <HardDriveDataDisplay hardDrive={hardDriveData}>
-                    <SmartAttributesTable hardDrive={hardDriveData} />
-                </HardDriveDataDisplay>}
-            {resultsVisible && hardDriveData.tasks.length > 0 && <h1 className={"px-5 pb-5 h1"}>TASKS</h1>}
-            {resultsVisible && hardDriveData.tasks.length > 0 && <TaskDisplay tasks={hardDriveData.tasks}/>}
-            <br/>
-            <br/>
-            <br/>
+            {resultsVisible && hardDriveData.length === 1 && <HardDriveDisplay resultsVisible={resultsVisible} hardDriveData={hardDriveData[0]}/>}
+            0123456789AB
+            {resultsVisible && hardDriveData.length > 1 &&
+                <Tabs
+                    defaultActiveKey="0"
+                    className="mb-3"
+                >
+                    {
+                        hardDriveData.map((data,index)=>{
+                            return <Tab title={convertDateFormat(data.report.created)} key={index} eventKey={index}>
+                                <HardDriveDisplay
+                                    resultsVisible={resultsVisible}
+                                    hardDriveData={data}/>
+                            </Tab>
+                        })
+                    }
+
+
+                </Tabs>
+
+
+            }
         </>
     )
 

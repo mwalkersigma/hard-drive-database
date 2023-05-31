@@ -2,13 +2,49 @@ import {Col, Form, Row} from "react-bootstrap";
 import {toHeaderCase} from "js-convert-case";
 import Container from "react-bootstrap/Container";
 
-export default function HardDriveDataDisplay({hardDrive,children}: any) {
+function processHardDriveData(hardDrive:any,rowSize=4){
+    // { keys -> { key -> values } }
+    // { keys -> [{ fieldKey, fieldValue]}
+    let skippedKeys = ["report_id","batch_report_id"];
+    let formatted = {};
+    let count = 0;
+    let fieldKeys = Object.keys(hardDrive);
+    let rows = [];
+    for(let fieldKey of Object.keys(hardDrive)){
+        let columns = [];
+        for(let itemKey of Object.keys(hardDrive[fieldKey])){
+            if(!skippedKeys.includes(itemKey)) {
+                let itemValue = hardDrive[fieldKey][itemKey];
+                let column = {itemKey, itemValue};
+                columns.push(column);
+                count++;
+                if (count === rowSize) {
+                    rows.push(columns);
+                    columns = [];
+                    count = 0;
+                }
+            }
+        }
+        rows.push(columns);
+        //@ts-ignore
+        formatted[fieldKey] = rows;
+        columns = [];
+        rows = [];
+        count = 0;
+    }
+    return formatted;
+}
+
+
+
+
+export default function HardDriveReportForm({hardDrive,children}: any) {
     const itemsPerRow = 4;
     let rows: any = [];
-    const formatted: any = {}
+    let formatted: any = {}
     let count = 0;
     Object.entries(hardDrive).forEach(([fieldKey, fieldValue]: any[]) => {
-        let temp: any[] = []
+        let temp: any[] = [];
         Object.entries(fieldValue).forEach(([itemKey, itemValue]) => {
             temp.push({itemKey, itemValue})
             count++
@@ -21,6 +57,7 @@ export default function HardDriveDataDisplay({hardDrive,children}: any) {
         formatted[fieldKey] = rows;
         rows = [];
     })
+    formatted = processHardDriveData(hardDrive);
     return (
         hardDrive &&
             <Container>
@@ -38,8 +75,12 @@ export default function HardDriveDataDisplay({hardDrive,children}: any) {
                                                         return (
                                                         <Form.Group key={k} as={Col} controlId="formGridManufacturer">
                                                             <Form.Label className={"fs-4 pb-1 text-truncate"}>{toHeaderCase(itemKey)}</Form.Label>
-                                                            <Form.Control className={"pb-1"} readOnly disabled type="text"
-                                                                          value={itemValue ?? "n/a"}/>
+                                                            <Form.Control
+                                                                className={"pb-1"}
+                                                                readOnly
+                                                                disabled
+                                                                type="text"
+                                                                value={itemValue ?? "n/a"}/>
                                                         </Form.Group>
                                                         )}
                                                     )}
