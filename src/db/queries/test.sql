@@ -1,6 +1,6 @@
-SELECT file_name FROM report;
+SELECT * FROM report
 --INNER JOIN conclusion ON report.report_id = conclusion.report_id
---INNER JOIN device on report.report_id = device.report_id
+INNER JOIN device on report.report_id = device.report_id
 --INNER JOIN erase on report.report_id = erase.report_id
 --INNER JOIN errors e on report.report_id = e.report_id
 --INNER JOIN kill_disk on report.report_id = kill_disk.report_id
