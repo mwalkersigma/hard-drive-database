@@ -56,7 +56,6 @@ export default function HardDriveSearch() {
             />
             <hr/>
             {resultsVisible && hardDriveData.length === 1 && <HardDriveDisplay resultsVisible={resultsVisible} hardDriveData={hardDriveData[0]}/>}
-            0123456789AB
             {resultsVisible && hardDriveData.length > 1 &&
                 <Tabs
                     defaultActiveKey="0"
