@@ -3,22 +3,8 @@ import * as dotenv from "dotenv";
 import Logger from "../modules/logger";
 dotenv.config();
 
-const {
-    USER : user,
-    PASSWORD:password,
-    HOST:host,
-    DATABASE:database,
-    PORT:port,
-    APPLICATION_NAME:application_name
-} = process.env;
-
 const pool = new Pool({
-    user,
-    password,
-    host,
-    database,
-    port,
-    application_name,
+    application_name:"hdd database",
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,
 });
