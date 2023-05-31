@@ -67,7 +67,6 @@ export default function SearchInput ({setHardDriveData,setResultsVisible}) {
         return {status:true};
 
     };
-    console.log(searchResults )
     return (
         <Container >
             <br/>
