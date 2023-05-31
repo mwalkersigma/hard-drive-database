@@ -30,7 +30,7 @@ function useFormData () {
     }
     return [state,updateState]
 }
-export default function AddHardDriveFile(props){
+export default function AddHardDriveFile(){
     const [isSelected,setIsSelected] = useState(false);
     const [formData , setFormData] = useFormData()
     const changeHandler = (event) => {
@@ -39,8 +39,6 @@ export default function AddHardDriveFile(props){
     };
 
     const handleSubmission = (e) => {
-        let companyName = formData?.owner;
-        let fileName = formData.file.name
         e.preventDefault();
         let url = buildUploadURL(formData);
         const options = {
