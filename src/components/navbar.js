@@ -11,8 +11,9 @@ function NavBar () {
                    {/* <Image src={logo} alt={""}/>*/}
                 </Navbar.Brand>
                 <Nav className="me-auto">
-                    <Nav.Link href={"/searchHardDrives"} as={Link}>Search Hard Drives</Nav.Link>
-                    {/*<Nav.Link href={"/addHardDrive"} as={Link}>Add new hard drives</Nav.Link>*/}
+                    <Nav.Link href={"/"} as={Link}>Find Hard Drive</Nav.Link>
+                    <Nav.Link href={"/addHardDrive"} as={Link}>Add new hard drives</Nav.Link>
+                    <Nav.Link href={"/changelog"} as={Link}>Change Log</Nav.Link>
                 </Nav>
             </Container>
         </Navbar>

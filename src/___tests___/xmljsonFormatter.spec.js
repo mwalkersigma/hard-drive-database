@@ -1,4 +1,4 @@
-import jsonFormatter from '../modules/xmljsonFormatter.ts';
+import formatter from '../modules/xmljsonFormatter.ts';
 import {describe,it,expect} from "vitest"
 describe('jsonFormatter', () => {
     it('should handle a simple object with text value', () => {
@@ -6,7 +6,7 @@ describe('jsonFormatter', () => {
             "_text": "foo"
         };
         const expected = "foo"
-        expect(jsonFormatter(input)).toEqual(expected);
+        expect(formatter(input)).toEqual(expected);
     });
 
     it('should handle an object with attributes', () => {
@@ -18,7 +18,7 @@ describe('jsonFormatter', () => {
         const expected = {
             "foo": "bar"
         };
-        expect(jsonFormatter(input)).toEqual(expected);
+        expect(formatter(input)).toEqual(expected);
     });
 
     it('should handle an object with attributes and text value', () => {
@@ -32,7 +32,7 @@ describe('jsonFormatter', () => {
             "foo": "bar",
             "value": "baz"
         };
-        expect(jsonFormatter(input)).toEqual(expected);
+        expect(formatter(input)).toEqual(expected);
     });
 
     it('should handle an object with a single child object', () => {
@@ -44,7 +44,7 @@ describe('jsonFormatter', () => {
         const expected = {
             "foo": "bar"
         };
-        expect(jsonFormatter(input)).toEqual(expected);
+        expect(formatter(input)).toEqual(expected);
     });
 
     it('should handle an object with multiple child objects', () => {
@@ -60,7 +60,7 @@ describe('jsonFormatter', () => {
             "foo": "bar",
             "baz": "qux"
         };
-        expect(jsonFormatter(input)).toEqual(expected);
+        expect(formatter(input)).toEqual(expected);
     });
 
     it('should handle an object with an array', () => {
@@ -77,7 +77,7 @@ describe('jsonFormatter', () => {
         const expected = {
             "foo": ["bar","baz"]
         };
-        expect(jsonFormatter(input)).toEqual(expected);
+        expect(formatter(input)).toEqual(expected);
     });
 
 });

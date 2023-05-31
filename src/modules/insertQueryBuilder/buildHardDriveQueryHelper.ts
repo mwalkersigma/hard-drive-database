@@ -5,142 +5,6 @@ export const defaults = {
     JSON:"{}",
 }
 
-interface EraseData {
-    method:string | null,
-    passes:string | null,
-    verification:string | null
-}
-interface KillDiskData {
-    'process-integrity':string | null,
-    fingerprint:{
-        write:string | null,
-        value:string | null
-    }
-    range:{
-        first:string | null,
-        total:string | null
-    }
-    initialize :string | null,
-}
-interface ErrorData {
-    lock_source: string | null;
-    retries: string | null;
-    errorLimit: string | null;
-    skip: string | null;
-    timeout: string | null;
-    terminate: string | null;
-    ignore: {
-        lock: string | null;
-        read: string | null;
-        write: string | null;
-    };
-}
-interface deviceData {
-    title:{
-        name:string | null,
-    }
-    'serial-number':{
-        'serial number' : string | null,
-    }
-    platformname : {
-        'platform name' : string | null,
-    }
-    product :{
-        'product name' : string | null,
-    }
-    type : {
-        Type : string | null,
-    }
-    revision : {
-        'Product Revision' : string | null,
-    }
-    geometry : {
-        partitioning : {
-            Partitioning:string | null,
-        }
-        'total-sec':{
-            'Total Sectors':string | null,
-        }
-        'first-sec':{
-            'First Sector':string | null,
-        }
-        bps:{
-            'Bytes Per Sector':string | null,
-        }
-    }
-    'smart_attributes' : smartAttributesData
-    'smart_parameters' : smartParametersData
-}
-interface resultsData {
-    started: {
-        "Started at": string | null,
-    }
-    elapsed:{
-            Duration:string | null,
-    }
-    process : {
-        name: {
-            Name:string | null,
-        }
-        errors : {
-            Errors:string | null,
-        }
-        result : {
-            Result:string | null,
-        }
-    }
-}
-interface smartParametersData {
-    'device-model': string | null;
-    'serial-number': string | null;
-    'firmware-version': string | null;
-    capacity: string | null;
-    'ata-version': string | null;
-    'ata-standard': string | null;
-    'smart-support': string | null;
-    'off-line-data-collection-status': string | null;
-    'self-test-execution-status': string | null;
-    'time-off-line-data-collection': string | null;
-    'off-line-data-collection-capabilities': string | null;
-    'smart-capabilities': string | null;
-    'error-logging-capabilities': string | null;
-    'short-self-test-time': string | null;
-    'extended-self-test-time': string | null;
-}
-interface attrs {
-    '@title': string;
-    value: string;
-    worst: string;
-    threshold: string;
-    type: string;
-    updated: string;
-   "when-failed": string;
-    'raw-value': string;
-}
-interface smartAttributesData {
-    attr: attrs[];
-}
-interface sys_infoData{
-    "os": string | null;
-    "platform": string | null
-    "kernel": string | null
-    "admin-rights": string | null
-    "hostname": string | null
-}
-export interface reportData {
-    company: string;
-    created:string
-    provider:string
-    kernel_version:string
-    title:string
-    name:string
-    device: deviceData;
-    results: resultsData;
-    sysinfo: sys_infoData;
-    erase: EraseData;
-    killDisk: KillDiskData;
-    errors: ErrorData;
-}
 const eraseQuery = (report_id:number,rawData:any,log:(message:string)=>void) => {
     const data = rawData?.erase;
     if(!data) return log("ERASE QUERY : erase data not found");
@@ -153,9 +17,9 @@ const eraseQuery = (report_id:number,rawData:any,log:(message:string)=>void) => 
     return [query,values];
 };
 const killDiskQuery = (report_id:number,rawData:any,log:(message:string)=>void) => {
-    const killDisk = rawData?.['kill-disk'];
+    const killDisk = rawData?.['kill_disk'];
     if(!killDisk) return log("KILL DISK QUERY : data not found");
-    const processIntegrity = killDisk?.['process-integrity'] ?? defaults.STRING;
+    const processIntegrity = killDisk?.['process_integrity'] ?? defaults.STRING;
     const fingerprintWrite = killDisk?.fingerprint?.write ?? defaults.SHORT_STRING;
     const fingerprintValue = killDisk?.fingerprint?.value ?? defaults.SHORT_STRING;
     const rangeFirst = killDisk?.range?.first ?? defaults.INT;
@@ -172,7 +36,7 @@ const errorQuery = (report_id:number,rawData:any,log:(message:string)=>void) => 
     if(!errorData) return log("ERROR QUERY : Error data not found");
     const lockSource = errorData?.lock_source ?? defaults.SHORT_STRING;
     const retries = errorData?.retries ?? defaults.INT;
-    const errorLimit = errorData?.errorLimit ?? defaults.INT;
+    const errorLimit = errorData?.error_limit ?? defaults.INT;
     const skip = errorData?.skip ?? defaults.INT;
     const timeout = errorData?.timeout ?? defaults.INT;
     const terminate = errorData?.terminate ?? defaults.SHORT_STRING;
@@ -189,15 +53,15 @@ const deviceQuery = (report_id:number,rawData:any,log:(message:string)=>void) =>
     const device = rawData.device;
     if(!device) return log("DEVICE QUERY : data not found");
     const title = device?.title?.Name ?? defaults.STRING;
-    const serialNumber = device?.['serial-number']?.['Serial Number'] ?? defaults.STRING;
-    const platformName = device?.platformname?.['Platform Name'] ?? defaults.STRING;
-    const productName = device?.product?.['Product Name'] ?? defaults.STRING;
+    const serialNumber = device?.['serial_number']?.['serial_number'] ?? defaults.STRING;
+    const platformName = device?.platformname?.['platform_name'] ?? defaults.STRING;
+    const productName = device?.product?.['product_name'] ?? defaults.STRING;
     const type = device?.type?.Type ?? defaults.STRING;
-    const revision = device?.revision?.['Product Revision'] ?? defaults.STRING;
-    const partitioning = device?.geometry?.partitioning?.Partitioning ?? defaults.STRING;
-    const totalSectors = device?.geometry?.['total-sec']?.['Total Sectors'] ?? defaults.STRING;
-    const firstSector = device?.geometry?.['first-sec']?.['First Sector'] ?? defaults.INT;
-    const bytesPerSector = device?.geometry?.bps?.['Bytes per Sector'] ?? defaults.INT;
+    const revision = device?.revision?.['product_revision'] ?? defaults.STRING;
+    const partitioning = device?.geometry?.partitioning?.partitioning ?? defaults.STRING;
+    const totalSectors = device?.geometry?.['total_sec']?.['total_sectors'] ?? defaults.STRING;
+    const firstSector = device?.geometry?.['first_sec']?.['first_sector'] ?? defaults.INT;
+    const bytesPerSector = device?.geometry?.bps?.['bytes_per_sector'] ?? defaults.INT;
     let query =
         `INSERT INTO device ( report_id, name, serial_number, platform_name, product_name, type, product_revision, partitioning, total_sectors, first_sector, bytes_per_sector)
         VALUES (${report_id}, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`;
@@ -207,11 +71,11 @@ const deviceQuery = (report_id:number,rawData:any,log:(message:string)=>void) =>
 const resultsQuery = (report_id:number,rawData:any,log:(message:string)=>void) => {
     const results = rawData?.results;
     if(!results) return log("RESULTS QUERY : data not found");
-    const startedAt = results?.started?.["Started at"] ?? defaults.STRING;
-    const duration = results?.elapsed?.Duration ?? defaults.STRING;
+    const startedAt = results?.started?.started_at ?? defaults.STRING;
+    const duration = results?.elapsed?.duration ?? defaults.STRING;
     const errors = results?.process?.errors?.Errors ?? defaults.STRING;
-    const name = results?.process?.name.Name ?? defaults.STRING;
-    const result = results?.process?.result.Result ?? defaults.STRING;
+    const name = results?.process?.name.name ?? defaults.STRING;
+    const result = results?.process?.result.result ?? defaults.STRING;
     const queryString =
         `INSERT INTO results ( report_id, start_at, duration, process_errors, process_name, process_results)
         VALUES (${report_id}, $1, $2, $3, $4, $5)`;
@@ -224,7 +88,7 @@ const sysInfoQuery = (report_id:number,rawData:any,log:(message:string)=>void) =
     const os = sysInfo?.os ?? defaults.STRING;
     const platform = sysInfo?.platform ?? defaults.STRING;
     const kernel = sysInfo?.kernel ?? defaults.STRING;
-    const adminRights = sysInfo?.['admin-rights'] ?? defaults.STRING;
+    const adminRights = sysInfo?.['admin_rights'] ?? defaults.STRING;
     const hostname = sysInfo?.hostname ?? defaults.STRING;
     const queryString =
         `INSERT INTO sys_info ( report_id, os, platform, kernel,admin_rights,hostname)
@@ -233,17 +97,17 @@ const sysInfoQuery = (report_id:number,rawData:any,log:(message:string)=>void) =
     return [queryString,queryValues];
 }
 const smart_AttributesQuery = (report_id:number,rawData:any,log:(message:string)=>void) => {
-    const smartAttributes = rawData.device?.['smart-attributes'];
+    const smartAttributes = rawData.device?.['smart_attributes'];
     if(!smartAttributes)return log("SMART ATTRIBUTES QUERY : data not found");
     return smartAttributes.attr.map((attr:any) => {
-        const id = attr['@title'] ?? defaults.STRING;
+        const id = attr['title'] ?? defaults.STRING;
         const value = attr.value ?? defaults.INT;
         const worst = attr.worst ?? defaults.INT;
         const threshold = attr.threshold ?? defaults.INT;
         const type = attr.type ?? defaults.STRING;
         const updated = attr.updated ?? defaults.STRING;
-        const whenFailed = attr["when-failed"] ?? defaults.STRING;
-        const rawValue = attr["raw-value"] ?? defaults.STRING;
+        const whenFailed = attr["when_failed"] ?? defaults.STRING;
+        const rawValue = attr["raw_value"] ?? defaults.STRING;
         return [`
         INSERT INTO smart_attributes (report_id, title, value, worst, threshold, attr_type, updated, when_failed, raw_value)
         VALUES (${report_id},$1,$2,$3,$4,$5,$6,$7,$8);`,
@@ -254,20 +118,20 @@ const smart_AttributesQuery = (report_id:number,rawData:any,log:(message:string)
 const smart_parametersQuery = (report_id:number,rawData:any,log:(message:string)=>void) => {
     const smartParameters = rawData.device?.smart_parameters;
     if(!smartParameters) return log("SMART PARAMETERS : data not found");
-    const deviceModel = smartParameters?.['device-model'] ?? defaults.STRING;
-    const firmwareVersion = smartParameters?.['firmware-version'] ?? defaults.STRING;
+    const deviceModel = smartParameters?.['device_model'] ?? defaults.STRING;
+    const firmwareVersion = smartParameters?.['firmware_version'] ?? defaults.STRING;
     const capacity = smartParameters?.capacity ?? defaults.STRING;
-    const ataVersion = smartParameters?.['ata-version'] ?? defaults.INT;
-    const ataStandard = smartParameters?.['ata-standard'] ?? defaults.STRING;
-    const smartSupport = smartParameters?.['smart-support'] ?? defaults.INT;
-    const offlineDataCollectionStatus = smartParameters?.['off-line-data-collection-status'] ?? defaults.INT;
-    const selfTestExecutionStatus = smartParameters?.['self-test-execution-status'] ?? defaults.INT;
-    const timeOfflineDataCollection = smartParameters?.["time-off-line-data-collection"] ?? defaults.INT;
-    const offlineDataCollectionCapability = smartParameters?.['off-line-data-collection-capabilities'] ?? defaults.INT;
-    const smartCapability = smartParameters?.['smart-capabilities'] ?? defaults.INT;
-    const errorLoggingCapability = smartParameters?.['error-logging-capabilities'] ?? defaults.INT;
-    const shortSelfTestTime = smartParameters?.['short-self-test-time'] ?? defaults.INT;
-    const extendedSelfTestTime = smartParameters?.['extended-self-test-time'] ?? defaults.INT;
+    const ataVersion = smartParameters?.['ata_version'] ?? defaults.INT;
+    const ataStandard = smartParameters?.['ata_standard'] ?? defaults.STRING;
+    const smartSupport = smartParameters?.['smart_support'] ?? defaults.INT;
+    const offlineDataCollectionStatus = smartParameters?.['off_line_data_collection_status'] ?? defaults.INT;
+    const selfTestExecutionStatus = smartParameters?.['self_test_execution_status'] ?? defaults.INT;
+    const timeOfflineDataCollection = smartParameters?.["time_off_line_data_collection"] ?? defaults.INT;
+    const offlineDataCollectionCapability = smartParameters?.['off_line_data_collection_capabilities'] ?? defaults.INT;
+    const smartCapability = smartParameters?.['smart_capabilities'] ?? defaults.INT;
+    const errorLoggingCapability = smartParameters?.['error_logging_capabilities'] ?? defaults.INT;
+    const shortSelfTestTime = smartParameters?.['short_self_test_time'] ?? defaults.INT;
+    const extendedSelfTestTime = smartParameters?.['extended_self_test_time'] ?? defaults.INT;
 
     return [`
         INSERT INTO smart_parameters (report_id, device_model, firmware_version, capacity, ata_version, ata_standard, smart_support, offline_data_collection_status, self_test_execution_status, time_offline_data_collection_sec, offline_data_collection_capabilities, smart_capabilities, error_logging_capabilities, short_self_test_time_min, extended_self_test_time_min)
@@ -287,6 +151,21 @@ const taskQuery = (report_id:number,rawData:any,log:(message:string)=>void) => {
     })
 }
 
+const conclusionQuery = (report_id:number,rawData:any,log:(message:string)=>void) => {
+    let conclusion = rawData?.conclusion;
+    let temp;
+    if(!conclusion){
+        log("CONCLUSION : data not found");
+        return
+    }
+    if(typeof conclusion === 'string'){
+        temp = conclusion;
+        conclusion = {value:temp};
+    }
+    const queryString = `INSERT INTO conclusion (report_id, value) VALUES (${report_id},$1);`;
+    const queryValues = [conclusion.value];
+    return [queryString,queryValues];
+}
 /**
  * @name buildHardDriveQueryHelper
  * @description Builds the queries for inserting hardrives into the database
@@ -305,6 +184,7 @@ function buildHardDriveQueryHelper (report_id:number,parsedXMLData:any,log:(mess
         killDiskQuery,
         sysInfoQuery,
         smart_parametersQuery,
+        conclusionQuery,
     ];
     const multiFieldQueries = [
         smart_AttributesQuery,
@@ -312,7 +192,7 @@ function buildHardDriveQueryHelper (report_id:number,parsedXMLData:any,log:(mess
     ]
     try {
         let queries = singleFieldQueries
-            .map((query:any) => query(report_id,parsedXMLData,log))
+            .map((query:any) => query(report_id,parsedXMLData,log));
         multiFieldQueries
             .map((query:any) => query(report_id,parsedXMLData,log))
             .filter((query:any) => query !== undefined)

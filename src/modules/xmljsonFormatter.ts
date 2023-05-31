@@ -1,3 +1,4 @@
+import jsConvert from "js-convert-case"
 /**
  * Recursively formats an object by removing unnecessary keys and converting XML attributes to object keys.
  * @param {Object} input - The object to format.
@@ -5,7 +6,7 @@
  * @param {String} subKey - When preforming recursive calls lets deeper calls know who the callee was.
  * @returns {Object} The formatted object.
  */
-export default function jsonFormatter(input:any, obj:any = {}, subKey:string = "") {
+function formatter(input:any, obj:any = {}, subKey:string = "") {
     function handleTextKey() {
         const value:string = input["_text"];
         const title:string = obj?.["@title"];
@@ -37,7 +38,7 @@ export default function jsonFormatter(input:any, obj:any = {}, subKey:string = "
     function handleArray(key:string) {
         let items = input[key];
         obj[key] = items.map((item:any) =>
-            typeof item === "object" ? jsonFormatter(item, {}, key) : item
+            typeof item === "object" ? formatter(item, {}, key) : item
         );
         if (subKey === "smart-parameters") {
 
@@ -59,7 +60,7 @@ export default function jsonFormatter(input:any, obj:any = {}, subKey:string = "
     }
 
     function handleObject(key:string) {
-        obj[key] = jsonFormatter(input[key], {}, key);
+        obj[key] = formatter(input[key], {}, key);
     }
 
     for (let key of Object.keys(input)) {
@@ -75,5 +76,11 @@ export default function jsonFormatter(input:any, obj:any = {}, subKey:string = "
             handleObject(key)
         }
     }
+
     return obj;
 }
+
+export default function jsonFormatter (input:any) {
+    return jsConvert.snakeKeys(formatter(input),{recursive:true,recursiveInArray:true});
+}
+

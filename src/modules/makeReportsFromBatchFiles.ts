@@ -14,9 +14,9 @@ function makeReportsFromBatch(formattedJson:any){
     batchReport.created = formattedJson.report.created;
     batchReport.provider = formattedJson.report.provider;
     batchReport.version = formattedJson.report?.version ?? "N/A";
-    batchReport.kernel_version = formattedJson.report['kernel-version'];
-    batchReport.started = formattedJson.report.started["Started at"];
-    batchReport.elapsed = formattedJson.report.elapsed["Duration"];
+    batchReport.kernel_version = formattedJson.report['kernel_version'];
+    batchReport.started = formattedJson.report.started["started_at"];
+    batchReport.elapsed = formattedJson.report.elapsed["duration"];
     batchReport.result = formattedJson.report.conclusion;
 
     const batchTasks:any[] = [];
@@ -29,7 +29,6 @@ function makeReportsFromBatch(formattedJson:any){
         temp.task_data = JSON.stringify(temp.task_data);
         batchTasks.push(temp);
     });
-
     let singleReports = [];
     for (let i = 0; i < formattedJson.report["bays"]["bay"].length; i++) {
         let template = {
@@ -44,25 +43,51 @@ function makeReportsFromBatch(formattedJson:any){
             },
             device:{
                 title:{Name:""},
-                "serial-number":{"Serial Number":""},
-                "platformname":{"Platform Name":""},
-                product:{"Product Name":""},
+                "serial_number":{"serial_number":""},
+                "platformname":{"platform_name":""},
+                product:{"product_name":""},
                 type:{type:""},
-                revision:{"Product Revision":""},
+                revision:{"product_revision":""},
                 geometry:{
                     partitioning:{
-                        Partitioning:""
+                        partitioning:""
                     },
-                    'total-sec':{
-                        "Total Sectors":""
+                    'total_sec':{
+                        "total_sectors":""
                     },
-                    'first-sec':{
-                        "First Sector":""
+                    'first_sec':{
+                        "first_sector":""
                     },
                     'bps':{
-                        "Bytes per Sector":""
+                        "bytes_per_sector":"",
                     }
                 },
+                smart_attributes:[{
+                    "title":"",
+                    value:"",
+                    worst:"",
+                    threshold:"",
+                    type:"",
+                    updated:"",
+                    "when_failed":"",
+                    "raw_value":"",
+                }],
+                smart_parameters:{
+                    "device_model":"",
+                    "firmware_version":"",
+                    capacity:"",
+                    "ata_version":"",
+                    "ata_standard":"",
+                    "smart_support":"",
+                    "offline_data_collection_status":"",
+                    "self_test_execution_status":"",
+                    "time_offline_data_collection":"",
+                    "off_line_data_collection_capabilities":"",
+                    "smart_capabilities":"",
+                    "error_logging_capabilities":"",
+                    "short_self_test_time":"",
+                    "extended_self_test_time":"",
+                }
             },
             erase:{
                 method:"",
@@ -82,75 +107,39 @@ function makeReportsFromBatch(formattedJson:any){
                     write:""
                 }
             },
-            kill_disk:{
-                ["process-integrity"]:"",
-                fingerprint:{
-                    write:"",
-                    value:"",
-                },
-                initialize:"",
-                range:{
-                    first:"",
-                    total:"",
-                }
-            },
             results:{
                 started:{
                     "Started at":""
                 },
                 elapsed:{
-                    "Duration":""
+                    "duration":""
                 },
                 process:{
                     errors:{
-                        Errors:""
+                        errors:""
                     },
                     name:{
-                        Name:""
+                        name:""
                     },
                     result:{
-                        Result:""
+                        result:""
                     }
                 },
-            },
-            smart_attributes:{
-                "@title":"",
-                value:"",
-                worst:"",
-                threshold:"",
-                type:"",
-                updated:"",
-                "when-failed":"",
-                "raw-value":"",
-            },
-            smart_parameters:{
-                "device-model":"",
-                "firmware-version":"",
-                capacity:"",
-                "ata-version":"",
-                "ata-standard":"",
-                "smart-support":"",
-                "offline-data-collection-status":"",
-                "self-test-execution-status":"",
-                "time-offline-data-collection":"",
-                "off-line-data-collection-capabilities":"",
-                "smart-capabilities":"",
-                "error-logging-capabilities":"",
-                "short-self-test-time":"",
-                "extended-self-test-time":"",
             },
             tasks: []
         }
 
         template.created = formattedJson.report.created;
         template.provider = formattedJson.report.provider;
-        template.kernel_version = formattedJson.report['kernel-version'];
+        template.kernel_version = formattedJson.report['kernel_version'];
         template.company = formattedJson.report.company;
         template.name = formattedJson.report['name'];
-        template.conclusion.value = formattedJson.report.conclusion;
+
+
+
         template.errors.lock_source = formattedJson.report.errors['locksource'];
         template.errors.retries = formattedJson.report.errors['retries'];
-        template.errors.error_limit = formattedJson.report.errors['errorLimit'];
+        template.errors.error_limit = formattedJson.report.errors['error_limit'];
         template.errors.skip = formattedJson.report.errors['skip'];
         template.errors.timeout = formattedJson.report.errors['timeout'];
         template.errors.terminate = formattedJson.report.errors['terminate'];
@@ -158,42 +147,42 @@ function makeReportsFromBatch(formattedJson:any){
         template.errors.ignore.read = formattedJson.report.errors.ignore['read'];
         template.errors.ignore.write = formattedJson.report.errors.ignore['write'];
 
-        template.results.started["Started at"] = formattedJson.report.started["Started at"];
-        template.results.elapsed.Duration = formattedJson.report.elapsed["Duration"];
-        template.results.process.name.Name = "Batch Erase";
-        template.results.process.errors.Errors = "N/A";
-        template.results.process.result.Result = "N/A";
+        template.results.started["Started at"] = formattedJson.report.started["started_at"];
+        template.results.elapsed.duration = formattedJson.report.elapsed["duration"];
+        template.results.process.name.name = "Batch Erase";
+        template.results.process.errors.errors = "N/A";
+        template.results.process.result.result = "N/A";
 
         let testBay = formattedJson.report['bays']['bay'][i];
         template.title = testBay.title;
+        template.conclusion.value = testBay.sequence.conclusion;
+        template.device.title.Name = testBay.device?.title["name"] ?? defaults.SHORT_STRING;
+        template.device["serial_number"]["serial_number"] = testBay.device['serial_number']['serial_number'];
+        template.device.platformname["platform_name"] = testBay.device['platformname']['platform_name'];
+        template.device.product["product_name"] = testBay.device['product']['product_name'];
+        template.device.type.type = testBay.device['type']['type'];
+        template.device.revision["product_revision"] = "N/A";
+        template.device.geometry.partitioning.partitioning = testBay.device.geometry['partitioning']['partitioning'];
+        template.device.geometry["total_sec"]["total_sectors"] = testBay.device.geometry['total_sec']['total_sectors'];
+        template.device.geometry["first_sec"]["first_sector"] = testBay.device.geometry['first_sec']['first_sector'];
+        template.device.geometry.bps["bytes_per_sector"] = testBay.device.geometry['bps']['bytes_per_Sector'];
 
-        template.device.title.Name = testBay.device?.title["Name"] ?? defaults.SHORT_STRING;
-        template.device["serial-number"]["Serial Number"] = testBay.device['serial-number']['Serial Number'];
-        template.device.platformname["Platform Name"] = testBay.device['platformname']['Platform Name'];
-        template.device.product["Product Name"] = testBay.device['product']['Product Name'];
-        template.device.type.type = testBay.device['type']['Type'];
-        template.device.revision["Product Revision"] = "N/A";
-        template.device.geometry.partitioning.Partitioning = testBay.device.geometry['partitioning']['Partitioning'];
-        template.device.geometry["total-sec"]["Total Sectors"] = testBay.device.geometry['total-sec']['Total Sectors'];
-        template.device.geometry["first-sec"]["First Sector"] = testBay.device.geometry['first-sec']['First Sector'];
-        template.device.geometry.bps["Bytes per Sector"] = testBay.device.geometry['bps']['Bytes per Sector'];
+        template.device.smart_parameters["device_model"] = testBay.device['smart_parameters']['device_model'];
+        template.device.smart_parameters["firmware_version"] = testBay.device['smart_parameters']['firmware_version'];
+        template.device.smart_parameters.capacity = testBay.device['smart_parameters']['capacity'];
+        template.device.smart_parameters["ata_version"] = testBay.device['smart_parameters']['ata_version'];
+        template.device.smart_parameters["ata_standard"] = testBay.device['smart_parameters']['ata_standard'];
+        template.device.smart_parameters["smart_support"] = testBay.device['smart_parameters']['smart_support'];
+        template.device.smart_parameters["offline_data_collection_status"] = testBay.device['smart_parameters']['off_line_data_collection_status'];
+        template.device.smart_parameters["self_test_execution_status"] = testBay.device['smart_parameters']['self_test_execution_status'];
+        template.device.smart_parameters["time_offline_data_collection"] = testBay.device['smart_parameters']['time_off_line_data_collection_sec'];
+        template.device.smart_parameters["off_line_data_collection_capabilities"] = testBay.device['smart_parameters']['off_line_data_collection_capabilities'];
+        template.device.smart_parameters["smart_capabilities"] = testBay.device['smart_parameters']['smart_capabilities'];
+        template.device.smart_parameters["error_logging_capabilities"] = testBay.device['smart_parameters']['error_logging_capabilities'];
+        template.device.smart_parameters["short_self_test_time"] = testBay.device['smart_parameters']['short_self_test_time_min'];
+        template.device.smart_parameters["extended_self_test_time"] = testBay.device['smart_parameters']['extended_self_test_time_min'];
 
-        template.smart_parameters["device-model"] = testBay.device['smart-parameters']['Device Model'];
-        template.smart_parameters["firmware-version"] = testBay.device['smart-parameters']['Firmware Version'];
-        template.smart_parameters.capacity = testBay.device['smart-parameters']['Capacity'];
-        template.smart_parameters["ata-version"] = testBay.device['smart-parameters']['ATA Version'];
-        template.smart_parameters["ata-standard"] = testBay.device['smart-parameters']['ATA Standard'];
-        template.smart_parameters["smart-support"] = testBay.device['smart-parameters']['SMART Support'];
-        template.smart_parameters["offline-data-collection-status"] = testBay.device['smart-parameters']['Off-line Data Collection Status'];
-        template.smart_parameters["self-test-execution-status"] = testBay.device['smart-parameters']['Self-test Execution Status'];
-        template.smart_parameters["time-offline-data-collection"] = testBay.device['smart-parameters']['Time Off-line Data Collection, sec'];
-        template.smart_parameters["off-line-data-collection-capabilities"] = testBay.device['smart-parameters']['Off-line Data Collection Capabilities'];
-        template.smart_parameters["smart-capabilities"] = testBay.device['smart-parameters']['SMART Capabilities'];
-        template.smart_parameters["error-logging-capabilities"] = testBay.device['smart-parameters']['Error Logging Capabilities'];
-        template.smart_parameters["short-self-test-time"] = testBay.device['smart-parameters']['Short Self-test Time, min'];
-        template.smart_parameters["extended-self-test-time"] = testBay.device['smart-parameters']['Extended Self-test Time, min'];
-
-        template.smart_attributes = testBay.device['smart-attributes'];
+        template.device.smart_attributes = testBay.device['smart_attributes'];
         const tasks: {title:string,data:any}[] = [];
         testBay.task.forEach((task:any) => {
             let temp = {

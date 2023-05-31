@@ -1,5 +1,6 @@
-const {Pool} = require('pg');
-const dotenv = require('dotenv');
+import {Pool} from "pg";
+import * as dotenv from "dotenv";
+import Logger from "../modules/logger";
 dotenv.config();
 
 const pool = new Pool({
@@ -8,17 +9,18 @@ const pool = new Pool({
     connectionTimeoutMillis: 2000,
 });
 
-module.exports = {
+const logger = new Logger();
 
-    query(logger=console.log){
-        return (text, params) =>{
-            let logString = `
-            Query: ${text}
-            Params: ${params}
-            `
-            logger(logString);
-            return pool.query(text, params);
-        };
-    }
 
+const db = {
+    query(text, params){
+        let logString = `Query: ${text} 
+        Params: ${params}`
+        logger.log(logString);
+        return pool.query(text, params);
+
+    },
+    logger,
 };
+
+export default db;
