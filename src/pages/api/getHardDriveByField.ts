@@ -62,7 +62,7 @@ async function handleReportQuery(queryParams:any,res,search){
 
     search.init(processedSearchData);
 
-    let result:{matchCandidate:string}|undefined = search.quickSearch(value);
+    let result:any = search.quickSearch(value);
     if(!result)return [];
     const {matchCandidate} = result;
     if(!result) handleRes(res)(400,'value for field not found');
@@ -84,7 +84,7 @@ async function handleReportQuery(queryParams:any,res,search){
 
         resolvedPromises.push({erase,device,errors,sysinfo,results,killDisk,smartParameters,smartAttributes,report,tasks,conclusion})
     }
-    return resolvedPromises
+    return {resolvedPromises,result}
 }
 
 // @ts-ignore
