@@ -13,9 +13,10 @@ function HardDriveDisplay ({resultsVisible,hardDriveData}) {
         {resultsVisible &&
             <HardDriveDataDisplay hardDrive={hardDriveData}>
                 <SmartAttributesTable hardDrive={hardDriveData} />
+                <br/>
+                {resultsVisible && hardDriveData.tasks.length > 0 && <h1 className={"px-0 pb-3 h1"}>TASKS</h1>}
+                {resultsVisible && hardDriveData.tasks.length > 0 && <TaskDisplay tasks={hardDriveData.tasks}/>}
             </HardDriveDataDisplay>}
-        {resultsVisible && hardDriveData.tasks.length > 0 && <h1 className={"px-5 pb-5 h1"}>TASKS</h1>}
-        {resultsVisible && hardDriveData.tasks.length > 0 && <TaskDisplay tasks={hardDriveData.tasks}/>}
         <br/>
         <br/>
         <br/>

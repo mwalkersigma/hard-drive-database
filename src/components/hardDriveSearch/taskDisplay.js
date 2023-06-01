@@ -20,7 +20,7 @@ function handleTasks(tasks){
 }
 export default function TaskDisplay({tasks}){
     return (
-        <Accordion className={"pb-5 px-5"} defaultActiveKey="0">
+        <Accordion className={"pb-5"} defaultActiveKey="0">
             {tasks && tasks.map((task,index)=>{
                 return (
                     <Accordion.Item eventKey={index} key={index}>
