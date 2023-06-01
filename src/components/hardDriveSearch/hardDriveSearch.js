@@ -14,7 +14,7 @@ function HardDriveDisplay ({resultsVisible,hardDriveData}) {
             <HardDriveDataDisplay hardDrive={hardDriveData}>
                 <SmartAttributesTable hardDrive={hardDriveData} />
                 <br/>
-                {resultsVisible && hardDriveData.tasks.length > 0 && <h1 className={"px-0 pb-3 h1"}>TASKS</h1>}
+                {resultsVisible && hardDriveData.tasks.length > 0 && <h1 className={"pb-3 h1"}>TASKS</h1>}
                 {resultsVisible && hardDriveData.tasks.length > 0 && <TaskDisplay tasks={hardDriveData.tasks}/>}
             </HardDriveDataDisplay>}
         <br/>
@@ -50,34 +50,36 @@ export default function HardDriveSearch() {
     const [resultsVisible,setResultsVisible] = useState(false);
     const [hardDriveData,setHardDriveData] = useState({});
     return (
-        <>
-            <SearchInput
-            setResultsVisible={setResultsVisible}
-            setHardDriveData={setHardDriveData}
-            />
-            <hr/>
-            {resultsVisible && hardDriveData.length === 1 && <HardDriveDisplay resultsVisible={resultsVisible} hardDriveData={hardDriveData[0]}/>}
-            {resultsVisible && hardDriveData.length > 1 &&
-                <Tabs
-                    defaultActiveKey="0"
-                    className="mb-3"
-                >
-                    {
-                        hardDriveData.map((data,index)=>{
-                            return <Tab title={convertDateFormat(data.report.created)} key={index} eventKey={index}>
-                                <HardDriveDisplay
-                                    resultsVisible={resultsVisible}
-                                    hardDriveData={data}/>
-                            </Tab>
-                        })
-                    }
+            <div style={{
+                padding:"0 14%"
+            }}>
+                <SearchInput
+                    setResultsVisible={setResultsVisible}
+                    setHardDriveData={setHardDriveData}
+                />
+                <br/>
+                {resultsVisible && hardDriveData.length === 1 && <hr/>}
+                {resultsVisible && hardDriveData.length === 1 && <HardDriveDisplay resultsVisible={resultsVisible} hardDriveData={hardDriveData[0]}/>}
+
+                {resultsVisible && hardDriveData.length > 1 &&
+                    <Tabs
+                        defaultActiveKey="0"
+                        className="mb-3 mx-4"
+                    >
+                        {
+                            hardDriveData.map((data,index)=>{
+                                return <Tab title={convertDateFormat(data.report.created)} key={index} eventKey={index}>
+                                    <HardDriveDisplay
+                                        resultsVisible={resultsVisible}
+                                        hardDriveData={data}/>
+                                </Tab>
+                            })
+                        }
 
 
-                </Tabs>
-
-
-            }
-        </>
+                    </Tabs>
+                }
+            </div>
     )
 
 }

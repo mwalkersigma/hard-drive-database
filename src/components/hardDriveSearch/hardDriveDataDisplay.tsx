@@ -61,7 +61,7 @@ export default function HardDriveReportForm({hardDrive,children}: any) {
     return (
         hardDrive &&
             <Container>
-                <Form className={"p-5 pb-0"}>
+                <Form className={"pt-5"}>
                     {Object.entries(formatted).map(([fieldKey, fieldValue]: [string, any], index) => {
                         if (fieldKey !== "tasks" && fieldKey !== "smartAttributes") {
                             return (
