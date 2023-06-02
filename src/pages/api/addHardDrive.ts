@@ -27,7 +27,7 @@ export default function handler (req:any,res:any) {
             if(valid) {
                 const parsedReportFile: any = parseXMLFile(req.body);
                 parsedReportFile.report.name = req.query.name;
-                parsedReportFile.report.company = req.query.name;
+                parsedReportFile.report.company = req.query.company_name;
                 const reportType = determineReportType(parsedReportFile);
                 let handlers: Handlers = {single: handleSingleReport, batch: handleBatchReport};
                 db.logger.log(`Handling ${reportType} report`);
