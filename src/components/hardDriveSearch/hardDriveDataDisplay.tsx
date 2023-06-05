@@ -39,24 +39,7 @@ function processHardDriveData(hardDrive:any,rowSize=4){
 
 
 export default function HardDriveReportForm({hardDrive,children}: any) {
-    const itemsPerRow = 4;
-    let rows: any = [];
     let formatted: any = {}
-    let count = 0;
-    Object.entries(hardDrive).forEach(([fieldKey, fieldValue]: any[]) => {
-        let temp: any[] = [];
-        Object.entries(fieldValue).forEach(([itemKey, itemValue]) => {
-            temp.push({itemKey, itemValue})
-            count++
-            if (count === itemsPerRow) {
-                rows.push(temp);
-                temp = [];
-                count = 0;
-            }
-        })
-        formatted[fieldKey] = rows;
-        rows = [];
-    })
     formatted = processHardDriveData(hardDrive);
     return (
         hardDrive &&

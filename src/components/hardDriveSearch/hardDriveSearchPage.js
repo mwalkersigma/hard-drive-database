@@ -45,7 +45,7 @@ function convertDateFormat(inputString) {
 
     return `${month}-${day}-${year} ${hours}:${minutes}:${seconds} ${ampm}`;
 }
-export default function HardDriveSearch() {
+export default function HardDriveSearchPage() {
     // internal state
     const [resultsVisible,setResultsVisible] = useState(false);
     const [hardDriveData,setHardDriveData] = useState({});

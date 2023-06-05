@@ -1,0 +1,5 @@
+SELECT serial_number
+FROM batch_report
+    INNER JOIN report on batch_report.batch_report_id = report.batch_report_id
+    INNER JOIN device d on report.report_id = d.report_id
+WHERE report.batch_report_id = 116;

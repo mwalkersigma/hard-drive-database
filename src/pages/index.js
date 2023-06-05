@@ -1,9 +1,9 @@
-import HardDriveSearch from "../components/hardDriveSearch/hardDriveSearch";
+import HardDriveSearchPage from "../components/hardDriveSearch/hardDriveSearchPage";
 
 export default function Home() {
     return (
         <>
-            <HardDriveSearch></HardDriveSearch>
+            <HardDriveSearchPage></HardDriveSearchPage>
         </>
     )
 }
