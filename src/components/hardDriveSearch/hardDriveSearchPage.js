@@ -14,8 +14,8 @@ function HardDriveDisplay ({resultsVisible,hardDriveData}) {
             <HardDriveDataDisplay hardDrive={hardDriveData}>
                 <SmartAttributesTable hardDrive={hardDriveData} />
                 <br/>
-                {resultsVisible && hardDriveData.tasks.length > 0 && <h1 className={"pb-3 h1"}>TASKS</h1>}
-                {resultsVisible && hardDriveData.tasks.length > 0 && <TaskDisplay tasks={hardDriveData.tasks}/>}
+                {resultsVisible && hardDriveData?.tasks?.length > 0 && <h1 className={"pb-3 h1"}>TASKS</h1>}
+                {resultsVisible && hardDriveData?.tasks?.length > 0 && <TaskDisplay tasks={hardDriveData.tasks}/>}
             </HardDriveDataDisplay>}
         <br/>
         <br/>
@@ -62,21 +62,14 @@ export default function HardDriveSearchPage() {
                 {resultsVisible && hardDriveData.length === 1 && <HardDriveDisplay resultsVisible={resultsVisible} hardDriveData={hardDriveData[0]}/>}
 
                 {resultsVisible && hardDriveData.length > 1 &&
-                    <Tabs
-                        defaultActiveKey="0"
-                        className="mb-3 mx-4"
-                    >
+                    <Tabs defaultActiveKey="0" className="mb-3 mx-4">
                         {
                             hardDriveData.map((data,index)=>{
                                 return <Tab title={convertDateFormat(data.report.created)} key={index} eventKey={index}>
-                                    <HardDriveDisplay
-                                        resultsVisible={resultsVisible}
-                                        hardDriveData={data}/>
+                                    <HardDriveDisplay resultsVisible={resultsVisible} hardDriveData={data}/>
                                 </Tab>
                             })
                         }
-
-
                     </Tabs>
                 }
             </div>
