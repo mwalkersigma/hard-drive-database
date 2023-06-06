@@ -42,11 +42,10 @@ export default class KMPSearch extends SearchAlgorithm{
     run(userQuery:string){
         let sanitizedUserInput = this.stripQuery(userQuery);
         let kmp = this.knuthMorrisPratt(this.dbs,sanitizedUserInput)
-        if(kmp > 0){
+        if(kmp >= 0){
             let head = this.getPositionOfHead(kmp);
             let tail = this.getPositionOfTail(kmp) - head + 1;
             let suspectedString = Array.from(this.dbs).splice(kmp + head,tail).join("").replace(/ /g,"0");
-            console.log(suspectedString)
             let filteredSearch = new FilteredSearch();
             filteredSearch.init(this.db);
 

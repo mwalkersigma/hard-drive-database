@@ -12,8 +12,8 @@ function getSearch () {
     let search = new Search();
     search.addAlgorithm(new NaiveSearch());
     search.addAlgorithm(new FilteredSearch());
-    search.addAlgorithm(new KMPSearch());
-    search.addAlgorithm(new LevenshteinDistanceSearch());
+    //  search.addAlgorithm(new KMPSearch());
+    //  search.addAlgorithm(new LevenshteinDistanceSearch());
     return search;
 }
 async function getSearchData (field:string,table:string) {
@@ -63,6 +63,7 @@ async function handleReportQuery(queryParams:any,res,search){
     search.init(processedSearchData);
 
     let result:any = search.quickSearch(value);
+    console.log(result)
     if(!result)return [];
     const {matchCandidate} = result;
     if(!result) handleRes(res)(400,'value for field not found');
