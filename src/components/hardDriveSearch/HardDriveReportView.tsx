@@ -127,7 +127,10 @@ function BootStrap ({hardDrive,children}: any) {
 }
 
 
-export default function HardDriveReportView({hardDrive,children,selStyle=true}:any){
+export default function HardDriveReportView(props:any){
+    const hardDrive = props.hardDrive;
+    const children = props.children;
+    let selStyle = props.selStyle ?? false;
     return (
         <>
             {selStyle && <BootStrap hardDrive={hardDrive}> {children} </BootStrap>}

@@ -33,7 +33,7 @@ function buildURL (searchBy,userSearchString) {
     let APIAddress = "/api/getHardDriveByField";
     return  browserPrefix + address + APIAddress + "?" + searchParams.toString();
 }
-export default function SearchInput ({setHardDriveData,setResultsVisible}) {
+export default function SearchInput ({setHardDriveData,setResultsVisible,isTextView,setIsTextView}) {
     const [userSearchString,setUserSearchString] = useState("");
     const [searchBy,setSearchBy] = useState("serial_number");
     const [searchResults,setSearchResults] = useState(undefined);
@@ -65,14 +65,12 @@ export default function SearchInput ({setHardDriveData,setResultsVisible}) {
         setHardDriveData(parsedJson.resolvedPromises);
         setSearchResults(parsedJson.result)
         return {status:true};
-
     };
-    console.log(searchResults)
     return (
         <Container >
             <br/>
             <Form.Label>Scan or Enter {jsConvert.toHeaderCase(searchBy)}</Form.Label>
-            <InputGroup>
+            <InputGroup className={"mb-3"}>
                 <Form.Control
                     onKeyDown={eventHandler}
                     type="text"
@@ -91,12 +89,22 @@ export default function SearchInput ({setHardDriveData,setResultsVisible}) {
                 </DropdownButton>
                 <Button  onClick={eventHandler}> Search </Button>
             </InputGroup>
-            <br/>
-            {searchResults && searchResults.foundWith !== "NaiveSearch" &&
-               <em>
-                   No exact match was found. <br/>
-                   Showing results for : <strong>{searchResults.matchCandidate}</strong> ?
-               </em> }
+            <div style={{
+                display:"flex",
+            }} className="message-group">
+                {searchResults && searchResults.foundWith !== "NaiveSearch" &&
+                    <em>
+                        No exact match was found. <br/>
+                        Showing results for : <strong>{searchResults.matchCandidate}</strong> ?
+                    </em> }
+                <span style={{
+                    width:"50%",
+                }}>
+                    {`You are currently using the ${isTextView ? "text" : "pretty"} view`}
+                    <span onClick={()=>setIsTextView(!isTextView)}> switch ?</span>
+                </span>
+            </div>
+
             <br/>
         </Container>
     )

@@ -1,5 +1,5 @@
 import {useState} from "react";
-import HardDriveDataDisplay from "./hardDriveDataDisplay";
+import HardDriveReportView from "./HardDriveReportView";
 import SmartAttributesTable from "./smartAttributesTable";
 import TaskDisplay from "./taskDisplay";
 import SearchInput from "./searchInput";
@@ -8,15 +8,15 @@ import {Tab, Tabs} from "react-bootstrap";
 
 
 
-function HardDriveDisplay ({resultsVisible,hardDriveData}) {
+function HardDriveDisplay ({resultsVisible,hardDriveData,selStyle}) {
     return (<>
         {resultsVisible &&
-            <HardDriveDataDisplay hardDrive={hardDriveData}>
+            <HardDriveReportView selStyle={selStyle} hardDrive={hardDriveData}>
                 <SmartAttributesTable hardDrive={hardDriveData} />
                 <br/>
                 {resultsVisible && hardDriveData?.tasks?.length > 0 && <h1 className={"pb-3 h1"}>TASKS</h1>}
                 {resultsVisible && hardDriveData?.tasks?.length > 0 && <TaskDisplay tasks={hardDriveData.tasks}/>}
-            </HardDriveDataDisplay>}
+            </HardDriveReportView>}
         <br/>
         <br/>
         <br/>
@@ -49,6 +49,8 @@ export default function HardDriveSearchPage() {
     // internal state
     const [resultsVisible,setResultsVisible] = useState(false);
     const [hardDriveData,setHardDriveData] = useState({});
+
+    const [isTextView,setIsTextView] = useState(false);
     return (
             <div style={{
                 padding:"0 14%"
@@ -56,17 +58,18 @@ export default function HardDriveSearchPage() {
                 <SearchInput
                     setResultsVisible={setResultsVisible}
                     setHardDriveData={setHardDriveData}
+                    setIsTextView={setIsTextView}
+                    isTextView={isTextView}
                 />
-                <br/>
                 {resultsVisible && hardDriveData.length === 1 && <hr/>}
-                {resultsVisible && hardDriveData.length === 1 && <HardDriveDisplay resultsVisible={resultsVisible} hardDriveData={hardDriveData[0]}/>}
+                {resultsVisible && hardDriveData.length === 1 && <HardDriveDisplay selStyle={isTextView} resultsVisible={resultsVisible} hardDriveData={hardDriveData[0]}/>}
 
                 {resultsVisible && hardDriveData.length > 1 &&
                     <Tabs defaultActiveKey="0" className="mb-3 mx-4">
                         {
                             hardDriveData.map((data,index)=>{
                                 return <Tab title={convertDateFormat(data.report.created)} key={index} eventKey={index}>
-                                    <HardDriveDisplay resultsVisible={resultsVisible} hardDriveData={data}/>
+                                    <HardDriveDisplay selStyle={isTextView} resultsVisible={resultsVisible} hardDriveData={data}/>
                                 </Tab>
                             })
                         }
