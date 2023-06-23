@@ -33,7 +33,7 @@ function buildURL (searchBy,userSearchString) {
     let APIAddress = "/api/getHardDriveByField";
     return  browserPrefix + address + APIAddress + "?" + searchParams.toString();
 }
-export default function SearchInput ({setHardDriveData,setResultsVisible,isTextView,setIsTextView}) {
+export default function SearchInput ({setHardDriveData,setResultsVisible}) {
     const [userSearchString,setUserSearchString] = useState("");
     const [searchBy,setSearchBy] = useState("serial_number");
     const [searchResults,setSearchResults] = useState(undefined);
@@ -97,12 +97,6 @@ export default function SearchInput ({setHardDriveData,setResultsVisible,isTextV
                         No exact match was found. <br/>
                         Showing results for : <strong>{searchResults.matchCandidate}</strong> ?
                     </em> }
-                <span style={{
-                    width:"50%",
-                }}>
-                    {`You are currently using the ${isTextView ? "text" : "pretty"} view`}
-                    <span onClick={()=>setIsTextView(!isTextView)}> switch ?</span>
-                </span>
             </div>
 
             <br/>

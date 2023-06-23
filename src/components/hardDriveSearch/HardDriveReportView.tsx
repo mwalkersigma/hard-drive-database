@@ -2,6 +2,7 @@ import {Col, Form, Row} from "react-bootstrap";
 import {toHeaderCase} from "js-convert-case";
 import Container from "react-bootstrap/Container";
 
+
 function processHardDriveData(hardDrive:any,rowSize=4){
     let skippedKeys = ["report_id","batch_report_id"];
     let formatted = {};
@@ -31,57 +32,6 @@ function processHardDriveData(hardDrive:any,rowSize=4){
     }
     return formatted;
 }
-
-function sanitizeData(data:any){
-    // remove all null values , report id anbd batch report ids from the data;
-    let sanitized:any = {}
-    Object.keys(data).map((key,)=>{
-        let value = data[key];
-        if(!value)return;
-        if(key === "report_id" || key === "batch_report_id")return;
-        sanitized[key] = value;
-    })
-    return sanitized;
-}
-function TextBased({hardDrive,children}:any){
-    let keys = Object.keys(hardDrive);
-    keys.forEach(key=>{
-        if(hardDrive[key]?.length === 0){
-            delete hardDrive[key];
-            return;
-        }
-        hardDrive[key] = sanitizeData(hardDrive[key]);
-    });
-    return (
-        hardDrive && <Container style={{
-            display:"flex",
-            flexWrap:"wrap"
-        }}>
-            {keys.map((key,i)=>{
-                if(!hardDrive[key])return;
-                return(
-                <div style={{
-                    width:"50%",
-                    height: "fit-content"
-                }} key={i}>
-                    <h3>{key}</h3>
-                    <ul>
-                    {Object.keys(hardDrive[key]).map((attr,j)=>{
-                        return (
-                            <li key={j}>
-                                <strong> {attr} :</strong>
-                                <span>{hardDrive[key][attr]}</span>
-                            </li>
-                        )
-                    })}
-                    </ul>
-                </div>)
-            })}
-            {hardDrive.smartAttributes?.length > 0 && children }
-        </Container>
-    )
-}
-
 
 function BootStrap ({hardDrive,children}: any) {
     let formatted: any = processHardDriveData(hardDrive)
@@ -127,14 +77,6 @@ function BootStrap ({hardDrive,children}: any) {
 }
 
 
-export default function HardDriveReportView(props:any){
-    const hardDrive = props.hardDrive;
-    const children = props.children;
-    let selStyle = props.selStyle ?? false;
-    return (
-        <>
-            {selStyle && <BootStrap hardDrive={hardDrive}> {children} </BootStrap>}
-            {!selStyle && <TextBased hardDrive={hardDrive}>{children} </TextBased>}
-        </>
-    )
+export default function HardDriveReportView({hardDrive,children}:any){
+    return <BootStrap hardDrive={hardDrive}> {children} </BootStrap>
 }

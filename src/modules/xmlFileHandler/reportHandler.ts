@@ -4,6 +4,7 @@ import buildHardDriveQuery from "../insertQueryBuilder/buildHardDriveQuery";
 export default function handleSingleReport (parsedFile:any) {
     const logger = db.logger;
     const {log} = logger;
+    console.log("here")
     // this returns a [string,string[]] and a callback function
     // the call back function takes the report_id and the db pool
     // and executes the subqueries
@@ -17,7 +18,10 @@ export default function handleSingleReport (parsedFile:any) {
             log(`starting subqueries\n`);
             subQueriesCallback(reportID,db,log);
         })
-        .catch((err:any)=> log(`${err}`))
+        .catch((err:any)=> {
+            log(err)
+            throw err
+        })
         .finally(()=>{log("Query Complete")})
 
 }

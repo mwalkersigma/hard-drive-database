@@ -49,8 +49,6 @@ export default function HardDriveSearchPage() {
     // internal state
     const [resultsVisible,setResultsVisible] = useState(false);
     const [hardDriveData,setHardDriveData] = useState({});
-
-    const [isTextView,setIsTextView] = useState(false);
     return (
             <div style={{
                 padding:"0 14%"
@@ -58,18 +56,15 @@ export default function HardDriveSearchPage() {
                 <SearchInput
                     setResultsVisible={setResultsVisible}
                     setHardDriveData={setHardDriveData}
-                    setIsTextView={setIsTextView}
-                    isTextView={isTextView}
                 />
                 {resultsVisible && hardDriveData.length === 1 && <hr/>}
-                {resultsVisible && hardDriveData.length === 1 && <HardDriveDisplay selStyle={isTextView} resultsVisible={resultsVisible} hardDriveData={hardDriveData[0]}/>}
-
+                {resultsVisible && hardDriveData.length === 1 && <HardDriveDisplay resultsVisible={resultsVisible} hardDriveData={hardDriveData[0]}/>}
                 {resultsVisible && hardDriveData.length > 1 &&
                     <Tabs defaultActiveKey="0" className="mb-3 mx-4">
                         {
                             hardDriveData.map((data,index)=>{
                                 return <Tab title={convertDateFormat(data.report.created)} key={index} eventKey={index}>
-                                    <HardDriveDisplay selStyle={isTextView} resultsVisible={resultsVisible} hardDriveData={data}/>
+                                    <HardDriveDisplay  resultsVisible={resultsVisible} hardDriveData={data}/>
                                 </Tab>
                             })
                         }

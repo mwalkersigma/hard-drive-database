@@ -176,6 +176,7 @@ const conclusionQuery = (report_id:number,rawData:any,log:(message:string)=>void
  * @returns {Array} Array of queries and values to be inserted into the database
  */
 function buildHardDriveQueryHelper (report_id:number,parsedXMLData:any,log:(message:string)=>void) {
+
     const singleFieldQueries = [
         eraseQuery,
         deviceQuery,
@@ -190,6 +191,7 @@ function buildHardDriveQueryHelper (report_id:number,parsedXMLData:any,log:(mess
         smart_AttributesQuery,
         taskQuery
     ]
+
     try {
         let queries = singleFieldQueries
             .map((query:any) => query(report_id,parsedXMLData,log));

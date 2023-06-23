@@ -35,7 +35,7 @@ export default function handleBatchReport (parsedFile:any){
                     .then(()=>{log(`Added task ${task_title} to batch report ${batchReportId}\n`)})
             })
         })
-        .catch((err:any)=> log(`${err}`))
+        .catch((err:any)=> {log(`${err}`); throw err})
         .finally(()=>{log("Query Complete")})
 
 }
