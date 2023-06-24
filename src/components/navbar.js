@@ -7,7 +7,7 @@ function NavBar () {
         <Navbar bg="dark" variant="dark">
             <Container>
                 <Navbar.Brand href={"/"} as={Link}>
-                    C & I HARD DRIVE DATABASE
+                    SANI-BASE
                    {/* <Image src={logo} alt={""}/>*/}
                 </Navbar.Brand>
                 <Nav className="me-auto">
