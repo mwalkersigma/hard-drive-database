@@ -1,37 +1,12 @@
 import db from "../../db/index";
 import getDateString from "../../modules/getDateString";
-import Search from "../../modules/search/search";
-import NaiveSearch from "../../modules/search/algorithms/naive";
-import FilteredSearch from "../../modules/search/algorithms/filtered";
-import KMPSearch from "../../modules/search/algorithms/kmp";
-import LevenshteinDistanceSearch from "../../modules/search/algorithms/levenschteinDistance";
 import handleRes from "../../modules/handleRes";
+// @ts-ignore
+import searchInit from "search-algorithm-design"
 
 
-function getSearch () {
-    let search = new Search();
-    search.addAlgorithm(new NaiveSearch());
-    search.addAlgorithm(new FilteredSearch());
-    search.addAlgorithm(new KMPSearch());
-    search.addAlgorithm(new LevenshteinDistanceSearch());
-    return search;
-}
 async function getSearchData (field:string,table:string) {
     return await db.query(`SELECT ${field},report_id FROM ${table};`);
-}
-
-function processSearchData (searchData:any,field:string) {
-    return searchData.rows.map((row: any, i: any) => row[field])
-}
-function createSearchDictionary(searchData:any,field:string){
-    return searchData.rows.reduce((acc:any,row:any)=>{
-        if(!acc[row[field]]){
-            acc[row[field]] = []
-        }
-        acc[row[field]].push(row.report_id);
-
-        return acc;
-    }, {})
 }
 async function getAllAttributesByReportID(reportId:string){
     const erase = await db.query(`SELECT * FROM erase WHERE report_id = $1`,[reportId]);
@@ -50,22 +25,20 @@ async function getAllAttributesByReportID(reportId:string){
 
 }
 // @ts-ignore
-async function handleReportQuery(queryParams:any,res,search){
+async function handleReportQuery(queryParams:any,res){
     // Creating defaults to help catch errors
     const defaults = {field:"serial_number",table:"device"};
     queryParams = {...defaults,...queryParams};
     const {value,field,table} = queryParams;
 
     let searchData = await getSearchData(field,table);
-    const processedSearchData = processSearchData(searchData,field);
-    const dictionary = createSearchDictionary(searchData,field);
-
-    search.init(processedSearchData);
-
+    const [search, dictionary] = searchInit(searchData,field,"report_id");
     let result:any = search.quickSearch(value);
+    console.log("result",result)
     if(!result) handleRes(res)(400,'value for field not found');
     const {matchCandidate} = result;
     let reportIds = dictionary[matchCandidate];
+    console.log("reportIds",reportIds)
     let resolvedPromises :any[] = [];
     for await (let reportId of reportIds){
         const completeData = await getAllAttributesByReportID(`${reportId}`);
@@ -92,8 +65,7 @@ export default function handler (req,res) {
     if(!queryParams)return res.status(400).json({text: 'Query is required'})
     db.logger.log(`request started at : ${getDateString()}`)
     try {
-        let search = getSearch();
-       return handleReportQuery(queryParams,res,search)
+       return handleReportQuery(queryParams,res)
             .then((data) => {
                return res.status(200).json(JSON.stringify(data))
             })
