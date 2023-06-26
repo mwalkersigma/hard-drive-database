@@ -3,7 +3,7 @@ import HardDriveSearchPage from "../components/hardDriveSearch/hardDriveSearchPa
 export default function Home() {
     return (
         <>
-            <HardDriveSearchPage></HardDriveSearchPage>
+            <HardDriveSearchPage/>
         </>
     )
 }

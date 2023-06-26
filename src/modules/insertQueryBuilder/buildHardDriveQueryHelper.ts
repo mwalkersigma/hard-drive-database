@@ -99,7 +99,7 @@ const sysInfoQuery = (report_id:number,rawData:any,log:(message:string)=>void) =
 const smart_AttributesQuery = (report_id:number,rawData:any,log:(message:string)=>void) => {
     const smartAttributes = rawData.device?.['smart_attributes'];
     if(!smartAttributes)return log("SMART ATTRIBUTES QUERY : data not found");
-    return smartAttributes.attr.map((attr:any) => {
+    return smartAttributes?.attr?.map((attr:any) => {
         const id = attr['title'] ?? defaults.STRING;
         const value = attr.value ?? defaults.INT;
         const worst = attr.worst ?? defaults.INT;
@@ -142,7 +142,7 @@ const smart_parametersQuery = (report_id:number,rawData:any,log:(message:string)
 const taskQuery = (report_id:number,rawData:any,log:(message:string)=>void) => {
     const tasks = rawData?.tasks;
     if(!tasks) return log("TASKS : data not found");
-    return tasks.map((task:any) => {
+    return tasks?.map((task:any) => {
         let taskTitle = task?.title ?? defaults.STRING;
         let taskData = task?.data ?? defaults.JSON;
         let queryString = `INSERT INTO tasks (report_id, task_title, task_data) VALUES (${report_id},$1,$2);`
@@ -176,6 +176,7 @@ const conclusionQuery = (report_id:number,rawData:any,log:(message:string)=>void
  * @returns {Array} Array of queries and values to be inserted into the database
  */
 function buildHardDriveQueryHelper (report_id:number,parsedXMLData:any,log:(message:string)=>void) {
+
     const singleFieldQueries = [
         eraseQuery,
         deviceQuery,
@@ -190,6 +191,7 @@ function buildHardDriveQueryHelper (report_id:number,parsedXMLData:any,log:(mess
         smart_AttributesQuery,
         taskQuery
     ]
+
     try {
         let queries = singleFieldQueries
             .map((query:any) => query(report_id,parsedXMLData,log));

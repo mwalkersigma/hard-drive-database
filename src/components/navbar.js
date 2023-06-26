@@ -7,14 +7,14 @@ function NavBar () {
         <Navbar bg="dark" variant="dark">
             <Container>
                 <Navbar.Brand href={"/"} as={Link}>
-                    C & I HARD DRIVE DATABASE
+                    SANI-BASE
                    {/* <Image src={logo} alt={""}/>*/}
                 </Navbar.Brand>
                 <Nav className="me-auto">
                     <Nav.Link href={"/"} as={Link}>Find Hard Drive</Nav.Link>
                     <Nav.Link href={"/addHardDriveFile"} as={Link}>Add erase report XML</Nav.Link>
-                    <Nav.Link href={"/addHardDrive"} as={Link}>Add new hard Drive</Nav.Link>
-                    <Nav.Link href={"/changelog"} as={Link}>Change Log</Nav.Link>
+                    {/*<Nav.Link href={"/addHardDrive"} as={Link}>Add new hard Drive</Nav.Link>*/}
+                    {/*<Nav.Link href={"/changelog"} as={Link}>Change Log</Nav.Link>*/}
                 </Nav>
             </Container>
         </Navbar>

@@ -2,13 +2,11 @@ import {Col, Form, Row} from "react-bootstrap";
 import {toHeaderCase} from "js-convert-case";
 import Container from "react-bootstrap/Container";
 
+
 function processHardDriveData(hardDrive:any,rowSize=4){
-    // { keys -> { key -> values } }
-    // { keys -> [{ fieldKey, fieldValue]}
     let skippedKeys = ["report_id","batch_report_id"];
     let formatted = {};
     let count = 0;
-    let fieldKeys = Object.keys(hardDrive);
     let rows = [];
     for(let fieldKey of Object.keys(hardDrive)){
         let columns = [];
@@ -35,12 +33,8 @@ function processHardDriveData(hardDrive:any,rowSize=4){
     return formatted;
 }
 
-
-
-
-export default function HardDriveReportForm({hardDrive,children}: any) {
-    let formatted: any = {}
-    formatted = processHardDriveData(hardDrive);
+function BootStrap ({hardDrive,children}: any) {
+    let formatted: any = processHardDriveData(hardDrive)
     return (
         hardDrive &&
             <Container>
@@ -75,9 +69,14 @@ export default function HardDriveReportForm({hardDrive,children}: any) {
                             )
                         }
                     })}
-                    {hardDrive.smartAttributes.length > 0 && children }
+                    {hardDrive.smartAttributes?.length > 0 && children }
                 </Form>
             </Container>
 
     )
+}
+
+
+export default function HardDriveReportView({hardDrive,children}:any){
+    return <BootStrap hardDrive={hardDrive}> {children} </BootStrap>
 }

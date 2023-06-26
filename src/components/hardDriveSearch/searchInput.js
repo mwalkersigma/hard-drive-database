@@ -65,13 +65,12 @@ export default function SearchInput ({setHardDriveData,setResultsVisible}) {
         setHardDriveData(parsedJson.resolvedPromises);
         setSearchResults(parsedJson.result)
         return {status:true};
-
     };
     return (
         <Container >
             <br/>
             <Form.Label>Scan or Enter {jsConvert.toHeaderCase(searchBy)}</Form.Label>
-            <InputGroup>
+            <InputGroup className={"mb-3"}>
                 <Form.Control
                     onKeyDown={eventHandler}
                     type="text"
@@ -90,12 +89,16 @@ export default function SearchInput ({setHardDriveData,setResultsVisible}) {
                 </DropdownButton>
                 <Button  onClick={eventHandler}> Search </Button>
             </InputGroup>
-            <br/>
-            {searchResults && searchResults.foundWith !== "NaiveSearch" &&
-               <em>
-                   No exact match was found. <br/>
-                   Showing results for : <strong>{searchResults.matchCandidate}</strong> ?
-               </em> }
+            <div style={{
+                display:"flex",
+            }} className="message-group">
+                {searchResults && searchResults.foundWith !== "NaiveSearch" &&
+                    <em>
+                        No exact match was found. <br/>
+                        Showing results for : <strong>{searchResults.matchCandidate}</strong> ?
+                    </em> }
+            </div>
+
             <br/>
         </Container>
     )

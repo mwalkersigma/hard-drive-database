@@ -10,14 +10,18 @@ export default function handleSingleReport (parsedFile:any) {
     // which add the data for the report to the database
     let hardDriveQueryParameters = buildHardDriveQuery(parsedFile.report) as [[string,any[]], (report_id: any, pool: any, log: (message:string)=>void)=>void];
     const [query,subQueriesCallback] = hardDriveQueryParameters;
+    console.log("Built Query");
     return db.query(...query)
         .then((result:any)=>{
             let reportID = result.rows[0].report_id;
-            log(`Report ID: ${reportID}\n`);
-            log(`starting subqueries\n`);
+            console.log(`Report ID: ${reportID}\n`);
+            console.log(`starting subqueries\n`);
             subQueriesCallback(reportID,db,log);
         })
-        .catch((err:any)=> log(`${err}`))
+        .catch((err:any)=> {
+            log(err)
+            throw err
+        })
         .finally(()=>{log("Query Complete")})
 
 }
