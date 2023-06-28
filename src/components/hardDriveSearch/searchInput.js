@@ -62,6 +62,7 @@ export default function SearchInput ({setHardDriveData,setResultsVisible}) {
         if(typeof serverJson !== "string")return {status:false,msg:"Serial Number not found"};
         let parsedJson = JSON.parse(serverJson);
         if(!parsedJson?.resolvedPromises?.length)return {status:false,msg:"Serial Number not found"};
+        console.log(parsedJson);
         setHardDriveData(parsedJson.resolvedPromises);
         setSearchResults(parsedJson.result)
         return {status:true};
@@ -92,7 +93,7 @@ export default function SearchInput ({setHardDriveData,setResultsVisible}) {
             <div style={{
                 display:"flex",
             }} className="message-group">
-                {searchResults && searchResults.foundWith !== "NaiveSearch" &&
+                {searchResults && searchResults.foundWith !== "naiveSearch" &&
                     <em>
                         No exact match was found. <br/>
                         Showing results for : <strong>{searchResults.matchCandidate}</strong> ?
