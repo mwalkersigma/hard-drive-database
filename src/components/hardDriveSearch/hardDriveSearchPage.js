@@ -11,11 +11,10 @@ import {Tab, Tabs} from "react-bootstrap";
 function HardDriveDisplay ({resultsVisible,hardDriveData,selStyle}) {
     return (<>
         {resultsVisible &&
-            <HardDriveReportView selStyle={selStyle} hardDrive={hardDriveData}>
-                <SmartAttributesTable hardDrive={hardDriveData} />
+            <HardDriveReportView smartAttributes={<SmartAttributesTable hardDrive={hardDriveData} />} selStyle={selStyle} hardDrive={hardDriveData}>
                 <br/>
-                {resultsVisible && hardDriveData?.tasks?.length > 0 && <h1 className={"pb-3 h1"}>TASKS</h1>}
-                {resultsVisible && hardDriveData?.tasks?.length > 0 && <TaskDisplay tasks={hardDriveData.tasks}/>}
+                {hardDriveData?.tasks?.length > 0 && <h1 className={"pb-3 h1"}>TASKS</h1>}
+                {hardDriveData?.tasks?.length > 0 && <TaskDisplay tasks={hardDriveData.tasks}/>}
             </HardDriveReportView>}
         <br/>
         <br/>
